@@ -1,5 +1,4 @@
-# basistheory-ios
-
+# Basis Theory iOS Elements SDK
 **Basis Theory Elements** are simple, secure, developer-friendly inputs that empower consumers to collect sensitive data from their users directly to Basis Theory’s certified vault.
 
 Think about it as a portal that we open within your mobile app that allows users to seamlessly tokenize information and never notice they are interacting with our technology. Here is how we make it possible:
@@ -14,21 +13,21 @@ Think about it as a portal that we open within your mobile app that allows users
 
 #### Via Xcode
 
-Add through Xcode via _File -> Add Packages_. Search for "https://github.com/Basis-Theory/basistheory-ios" and click on "Copy Dependency".
+Add through Xcode via _File -> Add Packages_. Search for "https://github.com/Basis-Theory/ios-elements" and click on "Copy Dependency".
 
 #### Via Package.swift
 
 Add the following line under `dependencies` to your `Package.swift`:
 
 ```swift
-    .package(url: "https://github.com/Basis-Theory/basistheory-ios", from: "X.X.X"),
+    .package(url: "https://github.com/Basis-Theory/ios-elements", from: "X.X.X"),
 ```
 
 And add `BasisTheoryElements` as a dependency to your `target`:
 
 ```swift
     dependencies: [
-        .product(name: "BasisTheoryElements", package: "basistheory-ios"),
+        .product(name: "BasisTheoryElements", package: "ios-elements"),
         ...
     ],
 ```
@@ -53,7 +52,7 @@ Add the following line to your `Podfile` under your `target`:
 
 ## Full TextElementUITextField Example
 
-The following code can be run from our [open source repo](https://github.com/Basis-Theory/basistheory-ios). Just open the `IntegrationTester.xcodeproj` file found [here](https://github.com/Basis-Theory/basistheory-ios/tree/master/IntegrationTester/IntegrationTester.xcodeproj).
+The following code can be run from our [open source repo](https://github.com/Basis-Theory/ios-elements). Just open the `IntegrationTester.xcodeproj` file found [here](https://github.com/Basis-Theory/ios-elements/tree/master/IntegrationTester/IntegrationTester.xcodeproj).
 
 ```swift
 //
@@ -168,7 +167,7 @@ class TextElementUITextFieldViewController: UIViewController {
 
 ## Full Split Card Elements Example
 
-The following code can be run from our [open source repo](https://github.com/Basis-Theory/basistheory-ios). Just open the `IntegrationTester.xcodeproj` file found [here](https://github.com/Basis-Theory/basistheory-ios/tree/master/IntegrationTester/IntegrationTester.xcodeproj).
+The following code can be run from our [open source repo](https://github.com/Basis-Theory/ios-elements). Just open the `IntegrationTester.xcodeproj` file found [here](https://github.com/Basis-Theory/ios-elements/tree/master/IntegrationTester/IntegrationTester.xcodeproj).
 
 ```swift
 //
