@@ -56,13 +56,6 @@ Add the following line to your `Podfile` under your `target`:
 The following code can be run from our [open source repo](https://github.com/Basis-Theory/ios-elements). Just open the `IntegrationTester.xcodeproj` file found [here](https://github.com/Basis-Theory/ios-elements/tree/master/IntegrationTester/IntegrationTester.xcodeproj).
 
 ```swift
-//
-//  ViewController.swift
-//  iOSExample
-//
-//  Created by Brian Gonzalez on 10/18/22.
-//
-
 import UIKit
 import Combine
 import BasisTheoryElements
@@ -171,13 +164,6 @@ class TextElementUITextFieldViewController: UIViewController {
 The following code can be run from our [open source repo](https://github.com/Basis-Theory/ios-elements). Just open the `IntegrationTester.xcodeproj` file found [here](https://github.com/Basis-Theory/ios-elements/tree/master/IntegrationTester/IntegrationTester.xcodeproj).
 
 ```swift
-//
-//  SplitCardElementsViewController.swift
-//  IntegrationTester
-//
-//  Created by Brian Gonzalez on 11/10/22.
-//
-
 import Foundation
 import UIKit
 import BasisTheoryElements
