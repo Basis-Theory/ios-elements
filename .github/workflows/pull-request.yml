@@ -46,7 +46,7 @@ jobs:
 
       - name: Dependency Check
         run: |
-          docker run -v "/home/runner/work/basistheory-ios/basistheory-ios":"/github/workspace" --workdir "/github/workspace" owasp/dependency-check-action:latest --enableExperimental --project "BasisTheoryElements" --failOnCVSS 1 --scan "Package.swift" --out "/github/workspace/reports"
+          docker run -v "/home/runner/work/ios-elements/ios-elements":"/github/workspace" --workdir "/github/workspace" owasp/dependency-check-action:latest --enableExperimental --project "BasisTheoryElements" --failOnCVSS 1 --scan "Package.swift" --out "/github/workspace/reports"
 
       - name: Upload Test results
         if: success() || failure()

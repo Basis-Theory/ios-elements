@@ -2,11 +2,11 @@ Pod::Spec.new do |s|
   s.name = 'BasisTheoryElements'
   s.ios.deployment_target = '13.0'
   s.version = '4.1.2'
-  s.source = { :git => 'https://github.com/Basis-Theory/basistheory-ios.git', :tag => '4.1.2' }
+  s.source = { :git => 'https://github.com/Basis-Theory/ios-elements.git', :tag => '4.1.2' }
   s.authors = 'BasisTheory'
   s.license = 'Apache'
-  s.homepage = 'https://github.com/Basis-Theory/basistheory-ios'
-  s.summary = 'BasisTheory SDK for Elements'
+  s.homepage = 'https://github.com/Basis-Theory/ios-elements'
+  s.summary = 'BasisTheory iOS Elements SDK'
   s.source_files = 'BasisTheoryElements/Sources/BasisTheoryElements**/*.swift'
   s.dependency 'BasisTheory', '0.6.1'
   s.swift_version = '5.5'
