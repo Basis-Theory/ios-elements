@@ -1,3 +1,16 @@
+### [4.2.1](https://github.com/Basis-Theory/ios-elements/compare/4.2.0...4.2.1) (2025-02-05)
+
+
+### Bug Fixes
+
+* update readme ([#81](https://github.com/Basis-Theory/ios-elements/issues/81)) ([a943737](https://github.com/Basis-Theory/ios-elements/commit/a943737b58bce603753336182e7547ca5d48970b))
+
+
+### Continuous Integration
+
+* tag PROD environment ([#80](https://github.com/Basis-Theory/ios-elements/issues/80)) ([826992a](https://github.com/Basis-Theory/ios-elements/commit/826992a55e284844a3c32528dd3b4d689777f19d))
+
+
 ## [4.2.0](https://github.com/Basis-Theory/ios-elements/compare/4.1.2...4.2.0) (2025-02-05)
 
 
