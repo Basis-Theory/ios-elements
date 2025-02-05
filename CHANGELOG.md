@@ -1,3 +1,16 @@
+## [4.2.0](https://github.com/Basis-Theory/ios-elements/compare/4.1.2...4.2.0) (2025-02-05)
+
+
+### Features
+
+* renaming repo ([#79](https://github.com/Basis-Theory/ios-elements/issues/79)) ([d719675](https://github.com/Basis-Theory/ios-elements/commit/d71967564c57c5f1305c92f07aca3b07d74c86dd))
+
+
+### Continuous Integration
+
+* update release notifications ([#77](https://github.com/Basis-Theory/ios-elements/issues/77)) ([c1de760](https://github.com/Basis-Theory/ios-elements/commit/c1de760ced89e344fbbdcd6888249faf66623e54))
+
+
 ### [4.1.2](https://github.com/Basis-Theory/ios-elements/compare/4.1.1...4.1.2) (2024-08-09)
 
 
