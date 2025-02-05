@@ -1,3 +1,11 @@
+### [4.2.2](https://github.com/Basis-Theory/ios-elements/compare/4.2.1...4.2.2) (2025-02-05)
+
+
+### Bug Fixes
+
+* update readme ([#82](https://github.com/Basis-Theory/ios-elements/issues/82)) ([4f6ea58](https://github.com/Basis-Theory/ios-elements/commit/4f6ea582b66f9b04c04a6deff21360eefebc490b))
+
+
 ### [4.2.1](https://github.com/Basis-Theory/ios-elements/compare/4.2.0...4.2.1) (2025-02-05)
 
 
