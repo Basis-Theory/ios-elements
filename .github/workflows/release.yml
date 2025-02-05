@@ -6,6 +6,7 @@ on:
 
 jobs:
   tag-and-release:
+    environment: PROD 
     name: Tag and Release
     runs-on: macOS-latest
     steps:
@@ -42,6 +43,7 @@ jobs:
           echo "${{ steps.tag-version.outputs.changelog }}" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
 
           git add CHANGELOG.md BasisTheoryElements.podspec BasisTheoryElements/Sources/BasisTheoryElements/BasisTheoryElements.swift
+          
           git commit -m "chore(release): upating podspec and changelog ${{ steps.tag-version.outputs.new_tag }} [skip ci]" || echo "Nothing to update"
 
       - name: Push changes
