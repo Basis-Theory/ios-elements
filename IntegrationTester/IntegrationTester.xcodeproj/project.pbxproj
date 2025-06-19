@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,8 @@
 		428CB10A293E398B00C8220E /* CardNumberUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */; };
 		6286CEC129523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */; };
 		62BEB1442953A1C600E5A0CE /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 62BEB1432953A1C600E5A0CE /* BasisTheoryElements */; };
+		646506022DC9490300660095 /* JWEEncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646506012DC9490300660095 /* JWEEncryptionTests.swift */; };
+		64B556F12DC955AF00D5F6B8 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */; };
 		9206601D2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */; };
 		921217F12A05C3E6008272E3 /* FailingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */; };
 		921217F32A05C6E2008272E3 /* SucceedingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */; };
@@ -31,7 +33,6 @@
 		924576C829004C4D00A01E70 /* Env.plist in Resources */ = {isa = PBXBuildFile; fileRef = 924576C729004C4D00A01E70 /* Env.plist */; };
 		924576CC2900519900A01E70 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924576CB2900519900A01E70 /* Configuration.swift */; };
 		9253E8E2291EB66E00FDF1A9 /* ElementUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9253E8E1291EB66E00FDF1A9 /* ElementUITextFieldTests.swift */; };
-		92566EA6293578B30047BFF2 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 92566EA5293578B30047BFF2 /* BasisTheoryElements */; };
 		9262E291296E050F00A77B83 /* SessionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9262E290296E050F00A77B83 /* SessionServiceTests.swift */; };
 		928869A229118DC4004E75E3 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924576CB2900519900A01E70 /* Configuration.swift */; };
 		928869A72911B564004E75E3 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924576CB2900519900A01E70 /* Configuration.swift */; };
@@ -67,6 +68,7 @@
 		428CB1052937C53000C8220E /* CardExpirationDateUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardExpirationDateUITextFieldTests.swift; sourceTree = "<group>"; };
 		428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberUITextFieldTests.swift; sourceTree = "<group>"; };
 		6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCardElementsUITextFieldTests.swift; sourceTree = "<group>"; };
+		646506012DC9490300660095 /* JWEEncryptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWEEncryptionTests.swift; sourceTree = "<group>"; };
 		9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVerificationCodeUITextFieldTests.swift; sourceTree = "<group>"; };
 		921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailingDelegateViewController.swift; sourceTree = "<group>"; };
 		921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SucceedingDelegateViewController.swift; sourceTree = "<group>"; };
@@ -89,7 +91,6 @@
 		924576C729004C4D00A01E70 /* Env.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Env.plist; sourceTree = "<group>"; };
 		924576CB2900519900A01E70 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		9253E8E1291EB66E00FDF1A9 /* ElementUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementUITextFieldTests.swift; sourceTree = "<group>"; };
-		92566EA4293578AB0047BFF2 /* BasisTheoryElements */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = BasisTheoryElements; path = ../BasisTheoryElements; sourceTree = "<group>"; };
 		9262E290296E050F00A77B83 /* SessionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionServiceTests.swift; sourceTree = "<group>"; };
 		929E30C22948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenizeAndCreateTokenServiceTests.swift; sourceTree = "<group>"; };
 		929E30CB295C9A0100A01A56 /* ProxyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxyServiceTests.swift; sourceTree = "<group>"; };
@@ -103,7 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92566EA6293578B30047BFF2 /* BasisTheoryElements in Frameworks */,
+				64B556F12DC955AF00D5F6B8 /* BasisTheoryElements in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,7 +129,6 @@
 		9245767C28FF46C100A01E70 = {
 			isa = PBXGroup;
 			children = (
-				92566EA4293578AB0047BFF2 /* BasisTheoryElements */,
 				92C3019529132287009F8D92 /* Env.plist */,
 				924576CB2900519900A01E70 /* Configuration.swift */,
 				924576C729004C4D00A01E70 /* Env.plist */,
@@ -154,7 +154,6 @@
 			isa = PBXGroup;
 			children = (
 				9245768828FF46C100A01E70 /* AppDelegate.swift */,
-				9245768A28FF46C100A01E70 /* SceneDelegate.swift */,
 				92A24DE6291DA1F0005DD4D2 /* SplitCardElementsViewController.swift */,
 				9245768C28FF46C100A01E70 /* TextElementUITextFieldViewController.swift */,
 				9245768E28FF46C100A01E70 /* Main.storyboard */,
@@ -165,6 +164,7 @@
 				921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */,
 				921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */,
 				0A363AF12A1D74AE00DA5E69 /* RawProxyResponseViewController.swift */,
+				9245768A28FF46C100A01E70 /* SceneDelegate.swift */,
 				0AB4378F2A4C9FB4000099CD /* HttpClientViewController.swift */,
 			);
 			path = IntegrationTester;
@@ -173,6 +173,7 @@
 		9245769E28FF46C200A01E70 /* UnitTests */ = {
 			isa = PBXGroup;
 			children = (
+				646506012DC9490300660095 /* JWEEncryptionTests.swift */,
 				929E30C22948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift */,
 				9253E8E1291EB66E00FDF1A9 /* ElementUITextFieldTests.swift */,
 				9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */,
@@ -223,6 +224,9 @@
 			name = IntegrationTester;
 			packageProductDependencies = (
 				92566EA5293578B30047BFF2 /* BasisTheoryElements */,
+				646506162DC951F500660095 /* BasisTheoryElements */,
+				646506292DC9548200660095 /* BasisTheoryElements */,
+				64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */,
 			);
 			productName = IntegrationTester;
 			productReference = 9245768528FF46C100A01E70 /* IntegrationTester.app */;
@@ -301,6 +305,9 @@
 				Base,
 			);
 			mainGroup = 9245767C28FF46C100A01E70;
+			packageReferences = (
+				64B556EF2DC955AF00D5F6B8 /* XCLocalSwiftPackageReference "../../ios-elements" */,
+			);
 			productRefGroup = 9245768628FF46C100A01E70 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -373,6 +380,7 @@
 				929E30C32948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift in Sources */,
 				92B7DCAF2939523C000DBB8A /* CardBrandTests.swift in Sources */,
 				428CB1062937C53000C8220E /* CardExpirationDateUITextFieldTests.swift in Sources */,
+				646506022DC9490300660095 /* JWEEncryptionTests.swift in Sources */,
 				924576A028FF46C200A01E70 /* TextElementUITextFieldTests.swift in Sources */,
 				9253E8E2291EB66E00FDF1A9 /* ElementUITextFieldTests.swift in Sources */,
 				921E47CC2A4237F20051355D /* HttpClientTests.swift in Sources */,
@@ -477,7 +485,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -532,7 +540,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -557,7 +565,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -585,7 +593,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -607,7 +615,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = basistheory.IntegrationTesterTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -626,7 +634,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = basistheory.IntegrationTesterTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -728,8 +736,27 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		64B556EF2DC955AF00D5F6B8 /* XCLocalSwiftPackageReference "../../ios-elements" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../ios-elements";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		62BEB1432953A1C600E5A0CE /* BasisTheoryElements */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BasisTheoryElements;
+		};
+		646506162DC951F500660095 /* BasisTheoryElements */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BasisTheoryElements;
+		};
+		646506292DC9548200660095 /* BasisTheoryElements */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BasisTheoryElements;
+		};
+		64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BasisTheoryElements;
 		};
