@@ -8,6 +8,7 @@ import Combine
 final class JWEEncryptionTests: XCTestCase {
     
     private let publicKey = "UrkhPioARkSiA4XbiS8081KqAbdsPn78HyEz9H0t9l8="
+    private let keyId = "test-key-id"
     
     func testEncryption() throws {
         
@@ -15,7 +16,8 @@ final class JWEEncryptionTests: XCTestCase {
         
         let encryptedString = try JWEEncryption.encrypt(
             data: testData,
-            recipientPublicKey: JWEEncryption.createJWK(from: publicKey)
+            recipientPublicKey: JWEEncryption.createJWK(from: publicKey),
+            keyId: keyId
         )
         
         // Verify the encrypted string is not empty and different from original
