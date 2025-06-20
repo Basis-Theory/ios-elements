@@ -36,12 +36,19 @@ public class JWEEncryption {
     /// - Parameters:
     ///   - data: The data to encrypt
     ///   - recipientPublicKey: The recipient's public key JWK
+    ///   - keyId: The key identifier to include in the JWE header
     /// - Returns: JWE compact serialization string
-    public static func encrypt(data: Data, recipientPublicKey: JWK) throws -> String {
+    public static func encrypt(data: Data, recipientPublicKey: JWK, keyId: String) throws -> String {
+        let protectedHeader = DefaultJWEHeaderImpl(
+            keyManagementAlgorithm: .ecdhES,
+            encodingAlgorithm: .a256GCM,
+            compressionAlgorithm: .deflate,
+            keyID: keyId
+        )
+
         let serialization = try JWE(
             payload: data,
-            keyManagementAlg: .ecdhES,
-            encryptionAlgorithm: .a256GCM,
+            protectedHeader: protectedHeader,
             recipientKey: recipientPublicKey
         )
 

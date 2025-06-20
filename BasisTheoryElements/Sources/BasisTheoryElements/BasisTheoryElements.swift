@@ -9,6 +9,7 @@ import Foundation
 import BasisTheory
 import AnyCodable
 import Combine
+import JSONWebKey
 
 public enum TokenizingError: Error {
     case invalidApiKey
@@ -100,6 +101,67 @@ final public class BasisTheoryElements {
         TokenizeAPI.tokenizeWithRequestBuilder(body: AnyCodable(mutableBody)).addBasisTheoryElementHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId).execute { result in
             completeApiRequest(endpoint: endpoint, btTraceId: btTraceId, result: result, completion: completion)
         }
+    }
+    
+    public static func encryptToken(body: EncryptToken, completion: @escaping ((_ data: [EncryptTokenResponse]?, _ error: Error?) -> Void)) -> Void {
+        do {
+            let recipientPublicKey = try JWEEncryption.createJWK(from: body.publicKey)
+            var responses: [EncryptTokenResponse] = []
+            
+            // Convert both cases to an array of token requests
+            let tokenRequestsArray: [[String: Any]]
+            switch body.tokenRequests {
+            case .single(let singleRequest):
+                tokenRequestsArray = [singleRequest]
+            case .multiple(let multipleRequests):
+                tokenRequestsArray = Array(multipleRequests.values)
+            }
+            
+            // Process each token request
+            for tokenRequest in tokenRequestsArray {
+                do {
+                    let encryptedResponse = try encryptSingleToken(
+                        tokenRequest: tokenRequest,
+                        recipientPublicKey: recipientPublicKey,
+                        keyId: body.keyId
+                    )
+                    responses.append(encryptedResponse)
+                } catch {
+                    completion(nil, error)
+                    return
+                }
+            }
+            
+            completion(responses, nil)
+            TelemetryLogging.info("Successful token encryption", attributes: [
+                "encryptionSuccess": true,
+                "tokenCount": responses.count
+            ])
+            
+        } catch {
+            completion(nil, error)
+            TelemetryLogging.error("Token encryption failed", error: error, attributes: [
+                "encryptionSuccess": false
+            ])
+        }
+    }
+    
+    private static func encryptSingleToken(
+        tokenRequest: [String: Any],
+        recipientPublicKey: JWK,
+        keyId: String
+    ) throws -> EncryptTokenResponse {
+        var mutableTokenRequest = tokenRequest
+        try replaceElementRefs(body: &mutableTokenRequest, endpoint: "LOCAL /encrypt-token", btTraceId: nil)
+        
+        let jsonData = try JSONSerialization.data(withJSONObject: mutableTokenRequest, options: [])
+        let encryptedString = try JWEEncryption.encrypt(
+            data: jsonData,
+            recipientPublicKey: recipientPublicKey,
+            keyId: keyId
+        )
+        
+        return EncryptTokenResponse(encrypted: encryptedString, type: "encrypted_token")
     }
     
     public static func createToken(body: CreateToken, apiKey: String? = nil, completion: @escaping ((_ data: CreateTokenResponse?, _ error: Error?) -> Void)) -> Void {

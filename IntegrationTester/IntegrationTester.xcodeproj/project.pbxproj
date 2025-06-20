@@ -13,6 +13,8 @@
 		428CB10A293E398B00C8220E /* CardNumberUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */; };
 		6286CEC129523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */; };
 		62BEB1442953A1C600E5A0CE /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 62BEB1432953A1C600E5A0CE /* BasisTheoryElements */; };
+		6453585B2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 92566EA5293578B30047BFF2 /* BasisTheoryElements */; };
+		6453585C2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 646506162DC951F500660095 /* BasisTheoryElements */; };
 		646506022DC9490300660095 /* JWEEncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646506012DC9490300660095 /* JWEEncryptionTests.swift */; };
 		64B556F12DC955AF00D5F6B8 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */; };
 		9206601D2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */; };
@@ -104,6 +106,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6453585C2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */,
+				6453585B2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */,
 				64B556F12DC955AF00D5F6B8 /* BasisTheoryElements in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,7 +229,6 @@
 			packageProductDependencies = (
 				92566EA5293578B30047BFF2 /* BasisTheoryElements */,
 				646506162DC951F500660095 /* BasisTheoryElements */,
-				646506292DC9548200660095 /* BasisTheoryElements */,
 				64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */,
 			);
 			productName = IntegrationTester;
@@ -749,10 +752,6 @@
 			productName = BasisTheoryElements;
 		};
 		646506162DC951F500660095 /* BasisTheoryElements */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = BasisTheoryElements;
-		};
-		646506292DC9548200660095 /* BasisTheoryElements */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BasisTheoryElements;
 		};
