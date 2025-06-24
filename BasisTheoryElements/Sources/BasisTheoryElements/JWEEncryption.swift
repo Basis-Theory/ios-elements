@@ -29,18 +29,23 @@ public class JWEEncryption {
     }
     
     public enum JWKError: Error {
-        case invalidBase64Key
+        case invalidPublicKey
         case errorConvertPayloadToString
+        case invalidKeyId
     }
     
     /// Creates a JWK from a public key string
     /// - Parameter publicKey: The base64 encoded public key string (can include PEM format)
     /// - Returns: JWK representation of the public key
-    /// - Throws: JWKError.invalidBase64Key if the public key is not valid base64
+    /// - Throws: JWKError.invalidPublicKey if the public key is not valid base64
     public static func createJWK(from publicKey: String) throws -> JWK {
+        guard !publicKey.isEmpty else {
+            throw JWKError.invalidPublicKey
+        }
+
         let cleanedKey = publicKey.removePemFormat()
         guard let keyData = Data(base64Encoded: cleanedKey) else {
-            throw JWKError.invalidBase64Key
+            throw JWKError.invalidPublicKey
         }
         
         return JWK(
@@ -58,6 +63,10 @@ public class JWEEncryption {
     ///   - keyId: The key identifier to include in the JWE header
     /// - Returns: JWE compact serialization string
     public static func encrypt(payload: Data, recipientPublicKey: JWK, keyId: String) throws -> String {
+
+        guard !keyId.isEmpty else {
+            throw JWKError.invalidKeyId
+        }
         
         let protectedHeader = DefaultJWEHeaderImpl(
             keyManagementAlgorithm: .ecdhES,

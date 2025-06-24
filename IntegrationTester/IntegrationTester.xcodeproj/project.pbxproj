@@ -16,6 +16,7 @@
 		646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646506012DC9490300660095 /* EncryptTokenTests.swift */; };
 		649C17882E04EA7D008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C17872E04EA7D008ED08F /* BasisTheoryElements */; };
 		649C178B2E09CEAD008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C178A2E09CEAD008ED08F /* BasisTheoryElements */; };
+		649C178D2E0B3771008ED08F /* EncryptTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */; };
 		9206601D2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */; };
 		921217F12A05C3E6008272E3 /* FailingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */; };
 		921217F32A05C6E2008272E3 /* SucceedingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */; };
@@ -70,6 +71,7 @@
 		428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberUITextFieldTests.swift; sourceTree = "<group>"; };
 		6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCardElementsUITextFieldTests.swift; sourceTree = "<group>"; };
 		646506012DC9490300660095 /* EncryptTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenTests.swift; sourceTree = "<group>"; };
+		649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenViewController.swift; sourceTree = "<group>"; };
 		9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVerificationCodeUITextFieldTests.swift; sourceTree = "<group>"; };
 		921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailingDelegateViewController.swift; sourceTree = "<group>"; };
 		921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SucceedingDelegateViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 		9245768728FF46C100A01E70 /* IntegrationTester */ = {
 			isa = PBXGroup;
 			children = (
+				649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */,
 				9245768828FF46C100A01E70 /* AppDelegate.swift */,
 				92A24DE6291DA1F0005DD4D2 /* SplitCardElementsViewController.swift */,
 				9245768C28FF46C100A01E70 /* TextElementUITextFieldViewController.swift */,
@@ -360,6 +363,7 @@
 				0A363AF22A1D74AE00DA5E69 /* RawProxyResponseViewController.swift in Sources */,
 				9245768928FF46C100A01E70 /* AppDelegate.swift in Sources */,
 				921217F32A05C6E2008272E3 /* SucceedingDelegateViewController.swift in Sources */,
+				649C178D2E0B3771008ED08F /* EncryptTokenViewController.swift in Sources */,
 				924576CC2900519900A01E70 /* Configuration.swift in Sources */,
 				9245768B28FF46C100A01E70 /* SceneDelegate.swift in Sources */,
 				0AB437902A4C9FB4000099CD /* HttpClientViewController.swift in Sources */,
