@@ -13,10 +13,9 @@
 		428CB10A293E398B00C8220E /* CardNumberUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */; };
 		6286CEC129523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */; };
 		62BEB1442953A1C600E5A0CE /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 62BEB1432953A1C600E5A0CE /* BasisTheoryElements */; };
-		6453585B2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 92566EA5293578B30047BFF2 /* BasisTheoryElements */; };
-		6453585C2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 646506162DC951F500660095 /* BasisTheoryElements */; };
-		646506022DC9490300660095 /* JWEEncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646506012DC9490300660095 /* JWEEncryptionTests.swift */; };
-		64B556F12DC955AF00D5F6B8 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */; };
+		646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646506012DC9490300660095 /* EncryptTokenTests.swift */; };
+		649C17882E04EA7D008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C17872E04EA7D008ED08F /* BasisTheoryElements */; };
+		649C178B2E09CEAD008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C178A2E09CEAD008ED08F /* BasisTheoryElements */; };
 		9206601D2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */; };
 		921217F12A05C3E6008272E3 /* FailingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */; };
 		921217F32A05C6E2008272E3 /* SucceedingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */; };
@@ -70,7 +69,7 @@
 		428CB1052937C53000C8220E /* CardExpirationDateUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardExpirationDateUITextFieldTests.swift; sourceTree = "<group>"; };
 		428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberUITextFieldTests.swift; sourceTree = "<group>"; };
 		6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCardElementsUITextFieldTests.swift; sourceTree = "<group>"; };
-		646506012DC9490300660095 /* JWEEncryptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWEEncryptionTests.swift; sourceTree = "<group>"; };
+		646506012DC9490300660095 /* EncryptTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenTests.swift; sourceTree = "<group>"; };
 		9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVerificationCodeUITextFieldTests.swift; sourceTree = "<group>"; };
 		921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailingDelegateViewController.swift; sourceTree = "<group>"; };
 		921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SucceedingDelegateViewController.swift; sourceTree = "<group>"; };
@@ -106,9 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6453585C2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */,
-				6453585B2E04E01B00B6E1E8 /* BasisTheoryElements in Frameworks */,
-				64B556F12DC955AF00D5F6B8 /* BasisTheoryElements in Frameworks */,
+				649C17882E04EA7D008ED08F /* BasisTheoryElements in Frameworks */,
+				649C178B2E09CEAD008ED08F /* BasisTheoryElements in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,7 +175,7 @@
 		9245769E28FF46C200A01E70 /* UnitTests */ = {
 			isa = PBXGroup;
 			children = (
-				646506012DC9490300660095 /* JWEEncryptionTests.swift */,
+				646506012DC9490300660095 /* EncryptTokenTests.swift */,
 				929E30C22948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift */,
 				9253E8E1291EB66E00FDF1A9 /* ElementUITextFieldTests.swift */,
 				9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */,
@@ -227,9 +225,8 @@
 			);
 			name = IntegrationTester;
 			packageProductDependencies = (
-				92566EA5293578B30047BFF2 /* BasisTheoryElements */,
-				646506162DC951F500660095 /* BasisTheoryElements */,
-				64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */,
+				649C17872E04EA7D008ED08F /* BasisTheoryElements */,
+				649C178A2E09CEAD008ED08F /* BasisTheoryElements */,
 			);
 			productName = IntegrationTester;
 			productReference = 9245768528FF46C100A01E70 /* IntegrationTester.app */;
@@ -309,7 +306,7 @@
 			);
 			mainGroup = 9245767C28FF46C100A01E70;
 			packageReferences = (
-				64B556EF2DC955AF00D5F6B8 /* XCLocalSwiftPackageReference "../../ios-elements" */,
+				649C17892E09CEAD008ED08F /* XCLocalSwiftPackageReference "../../ios-elements" */,
 			);
 			productRefGroup = 9245768628FF46C100A01E70 /* Products */;
 			projectDirPath = "";
@@ -383,7 +380,7 @@
 				929E30C32948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift in Sources */,
 				92B7DCAF2939523C000DBB8A /* CardBrandTests.swift in Sources */,
 				428CB1062937C53000C8220E /* CardExpirationDateUITextFieldTests.swift in Sources */,
-				646506022DC9490300660095 /* JWEEncryptionTests.swift in Sources */,
+				646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */,
 				924576A028FF46C200A01E70 /* TextElementUITextFieldTests.swift in Sources */,
 				9253E8E2291EB66E00FDF1A9 /* ElementUITextFieldTests.swift in Sources */,
 				921E47CC2A4237F20051355D /* HttpClientTests.swift in Sources */,
@@ -740,7 +737,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		64B556EF2DC955AF00D5F6B8 /* XCLocalSwiftPackageReference "../../ios-elements" */ = {
+		649C17892E09CEAD008ED08F /* XCLocalSwiftPackageReference "../../ios-elements" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../ios-elements";
 		};
@@ -751,15 +748,11 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = BasisTheoryElements;
 		};
-		646506162DC951F500660095 /* BasisTheoryElements */ = {
+		649C17872E04EA7D008ED08F /* BasisTheoryElements */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BasisTheoryElements;
 		};
-		64B556F02DC955AF00D5F6B8 /* BasisTheoryElements */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = BasisTheoryElements;
-		};
-		92566EA5293578B30047BFF2 /* BasisTheoryElements */ = {
+		649C178A2E09CEAD008ED08F /* BasisTheoryElements */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BasisTheoryElements;
 		};

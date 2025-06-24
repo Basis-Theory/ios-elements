@@ -103,47 +103,35 @@ final public class BasisTheoryElements {
         }
     }
     
-    public static func encryptToken(body: EncryptToken, completion: @escaping ((_ data: [EncryptTokenResponse]?, _ error: Error?) -> Void)) -> Void {
-        do {
-            let recipientPublicKey = try JWEEncryption.createJWK(from: body.publicKey)
-            var responses: [EncryptTokenResponse] = []
-            
-            // Convert both cases to an array of token requests
-            let tokenRequestsArray: [[String: Any]]
-            switch body.tokenRequests {
-            case .single(let singleRequest):
-                tokenRequestsArray = [singleRequest]
-            case .multiple(let multipleRequests):
-                tokenRequestsArray = Array(multipleRequests.values)
-            }
-            
-            // Process each token request
-            for tokenRequest in tokenRequestsArray {
-                do {
-                    let encryptedResponse = try encryptSingleToken(
-                        tokenRequest: tokenRequest,
-                        recipientPublicKey: recipientPublicKey,
-                        keyId: body.keyId
-                    )
-                    responses.append(encryptedResponse)
-                } catch {
-                    completion(nil, error)
-                    return
-                }
-            }
-            
-            completion(responses, nil)
-            TelemetryLogging.info("Successful token encryption", attributes: [
-                "encryptionSuccess": true,
-                "tokenCount": responses.count
-            ])
-            
-        } catch {
-            completion(nil, error)
-            TelemetryLogging.error("Token encryption failed", error: error, attributes: [
-                "encryptionSuccess": false
-            ])
+    public static func encryptToken(encryptToken: EncryptToken) throws -> [EncryptTokenResponse] {
+        let recipientPublicKey = try JWEEncryption.createJWK(from: encryptToken.publicKey)
+        var responses: [EncryptTokenResponse] = []
+        
+        // Convert both cases to an array of token requests
+        let tokenRequestsArray: [[String: Any]]
+        switch encryptToken.tokenRequests {
+        case .single(let singleRequest):
+            tokenRequestsArray = [singleRequest]
+        case .multiple(let multipleRequests):
+            tokenRequestsArray = Array(multipleRequests.values)
         }
+        
+        // Process each token request
+        for tokenRequest in tokenRequestsArray {
+            let encryptedResponse = try encryptSingleToken(
+        tokenRequest: tokenRequest,
+                recipientPublicKey: recipientPublicKey,
+                keyId: encryptToken.keyId
+            )
+            responses.append(encryptedResponse)
+        }
+        
+        TelemetryLogging.info("Successful token encryption", attributes: [
+            "encryptionSuccess": true,
+            "tokenCount": responses.count
+        ])
+        
+        return responses
     }
     
     private static func encryptSingleToken(
@@ -152,16 +140,26 @@ final public class BasisTheoryElements {
         keyId: String
     ) throws -> EncryptTokenResponse {
         var mutableTokenRequest = tokenRequest
+        
+        guard let type = tokenRequest["type"] as? String else {
+            throw TokenizingError.invalidInput
+        }
+        
         try replaceElementRefs(body: &mutableTokenRequest, endpoint: "LOCAL /encrypt-token", btTraceId: nil)
         
-        let jsonData = try JSONSerialization.data(withJSONObject: mutableTokenRequest, options: [])
+        guard let dataField = mutableTokenRequest["data"] else {
+            throw TokenizingError.invalidInput
+        }
+
+        let jsonData = try JSONSerialization.data(withJSONObject: dataField, options: [])
+
         let encryptedString = try JWEEncryption.encrypt(
-            data: jsonData,
+            payload: jsonData,
             recipientPublicKey: recipientPublicKey,
             keyId: keyId
         )
         
-        return EncryptTokenResponse(encrypted: encryptedString, type: "encrypted_token")
+        return EncryptTokenResponse(encrypted: encryptedString, type: type)
     }
     
     public static func createToken(body: CreateToken, apiKey: String? = nil, completion: @escaping ((_ data: CreateTokenResponse?, _ error: Error?) -> Void)) -> Void {
