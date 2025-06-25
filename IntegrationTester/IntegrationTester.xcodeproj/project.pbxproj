@@ -17,6 +17,7 @@
 		649C17882E04EA7D008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C17872E04EA7D008ED08F /* BasisTheoryElements */; };
 		649C178B2E09CEAD008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C178A2E09CEAD008ED08F /* BasisTheoryElements */; };
 		649C178D2E0B3771008ED08F /* EncryptTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */; };
+		649C17902E0C394B008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C178F2E0C394B008ED08F /* BasisTheoryElements */; };
 		9206601D2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */; };
 		921217F12A05C3E6008272E3 /* FailingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */; };
 		921217F32A05C6E2008272E3 /* SucceedingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */; };
@@ -107,6 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				649C17902E0C394B008ED08F /* BasisTheoryElements in Frameworks */,
 				649C17882E04EA7D008ED08F /* BasisTheoryElements in Frameworks */,
 				649C178B2E09CEAD008ED08F /* BasisTheoryElements in Frameworks */,
 			);
@@ -230,6 +232,7 @@
 			packageProductDependencies = (
 				649C17872E04EA7D008ED08F /* BasisTheoryElements */,
 				649C178A2E09CEAD008ED08F /* BasisTheoryElements */,
+				649C178F2E0C394B008ED08F /* BasisTheoryElements */,
 			);
 			productName = IntegrationTester;
 			productReference = 9245768528FF46C100A01E70 /* IntegrationTester.app */;
@@ -309,7 +312,7 @@
 			);
 			mainGroup = 9245767C28FF46C100A01E70;
 			packageReferences = (
-				649C17892E09CEAD008ED08F /* XCLocalSwiftPackageReference "../../ios-elements" */,
+				649C178E2E0C394B008ED08F /* XCLocalSwiftPackageReference "../../ios-elements" */,
 			);
 			productRefGroup = 9245768628FF46C100A01E70 /* Products */;
 			projectDirPath = "";
@@ -741,7 +744,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		649C17892E09CEAD008ED08F /* XCLocalSwiftPackageReference "../../ios-elements" */ = {
+		649C178E2E0C394B008ED08F /* XCLocalSwiftPackageReference "../../ios-elements" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../ios-elements";
 		};
@@ -757,6 +760,10 @@
 			productName = BasisTheoryElements;
 		};
 		649C178A2E09CEAD008ED08F /* BasisTheoryElements */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BasisTheoryElements;
+		};
+		649C178F2E0C394B008ED08F /* BasisTheoryElements */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BasisTheoryElements;
 		};

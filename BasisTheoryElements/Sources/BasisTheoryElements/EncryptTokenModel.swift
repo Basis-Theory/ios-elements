@@ -1,6 +1,6 @@
 import Foundation
 
-public struct EncryptToken {
+public struct EncryptTokenRequest {
     public let tokenRequests: TokenRequests
     public let publicKey: String
     public let keyId: String
@@ -39,50 +39,7 @@ public struct EncryptToken {
         self.publicKey = publicKey
         self.keyId = keyId
     }
-    
-    /// Get the token requests as a dictionary for processing
-    /// - Returns: Dictionary representation of token requests
-    public func getTokenRequestsAsDictionary() -> [String: Any] {
-        switch tokenRequests {
-        case .single(let singleRequest):
-            return singleRequest
-        case .multiple(let multipleRequests):
-            return multipleRequests
-        }
-    }
-    
-    /// Check if this is a single token request
-    /// - Returns: True if single token request, false if multiple
-    public var isSingleTokenRequest: Bool {
-        switch tokenRequests {
-        case .single:
-            return true
-        case .multiple:
-            return false
-        }
-    }
-    
-    /// Get the single token request (only valid if isSingleTokenRequest is true)
-    /// - Returns: Single token request dictionary or nil
-    public var singleTokenRequest: [String: Any]? {
-        switch tokenRequests {
-        case .single(let request):
-            return request
-        case .multiple:
-            return nil
-        }
-    }
-    
-    /// Get the multiple token requests (only valid if isSingleTokenRequest is false)
-    /// - Returns: Multiple token requests dictionary or nil
-    public var multipleTokenRequests: [String: [String: Any]]? {
-        switch tokenRequests {
-        case .single:
-            return nil
-        case .multiple(let requests):
-            return requests
-        }
-    }
+
 }
 
 public struct EncryptTokenResponse {

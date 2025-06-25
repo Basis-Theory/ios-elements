@@ -12,10 +12,7 @@ extension String {
      * -----END PUBLIC KEY-----
      */
     func removePemFormat() -> String {
-        return self
-            .replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "")
-            .replacingOccurrences(of: "-----END PUBLIC KEY-----", with: "")
-            .replacingOccurrences(of: "\\s", with: "", options: .regularExpression)
+        return self.replacingOccurrences(of: "-----.*?-----|\\s", with: "", options: .regularExpression)
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }

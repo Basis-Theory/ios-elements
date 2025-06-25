@@ -21,9 +21,9 @@ final class JWEEncryptionTests: XCTestCase {
             ]
         ]
 
-        let encryptTokenRequest = EncryptToken(tokenRequests: cardTokenRequest, publicKey: publicKey, keyId: keyId)
+        let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: publicKey, keyId: keyId)
 
-        let encryptResponse = try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)
+        let encryptResponse = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
 
         XCTAssertEqual(encryptResponse.count, 1)
         XCTAssertEqual(encryptResponse[0].type, "card")
@@ -57,9 +57,9 @@ final class JWEEncryptionTests: XCTestCase {
             ]
         ]
 
-        let encryptTokenRequest = EncryptToken(tokenRequests: multipleTokenRequests, publicKey: publicKey, keyId: keyId)
+        let encryptTokenRequest = EncryptTokenRequest(tokenRequests: multipleTokenRequests, publicKey: publicKey, keyId: keyId)
 
-        let encryptResponse = try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)
+        let encryptResponse = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
 
         XCTAssertEqual(encryptResponse.count, 3)
         
@@ -82,9 +82,9 @@ final class JWEEncryptionTests: XCTestCase {
         ]
 
         // Test with invalid base64 public key
-        let encryptTokenRequest = EncryptToken(tokenRequests: cardTokenRequest, publicKey: "invalid-key", keyId: keyId)
+        let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: "invalid-key", keyId: keyId)
 
-        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)) { error in
+        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
             XCTAssertEqual(error as? JWEEncryption.JWKError, JWEEncryption.JWKError.invalidPublicKey)
         }
     }
@@ -98,9 +98,9 @@ final class JWEEncryptionTests: XCTestCase {
         ]
 
         // Test with empty public key
-        let encryptTokenRequest = EncryptToken(tokenRequests: cardTokenRequest, publicKey: "", keyId: keyId)
+        let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: "", keyId: keyId)
 
-        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)) { error in
+        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
             XCTAssertEqual(error as? JWEEncryption.JWKError, JWEEncryption.JWKError.invalidPublicKey)
         }
     }
@@ -114,9 +114,9 @@ final class JWEEncryptionTests: XCTestCase {
         ]
 
         // Test with empty keyId - should still work but with empty keyId in header
-        let encryptTokenRequest = EncryptToken(tokenRequests: cardTokenRequest, publicKey: publicKey, keyId: "")
+        let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: publicKey, keyId: "")
 
-         XCTAssertThrowsError(try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)) { error in
+         XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
             XCTAssertEqual(error as? JWEEncryption.JWKError, JWEEncryption.JWKError.invalidKeyId)
         }
     }
@@ -129,9 +129,9 @@ final class JWEEncryptionTests: XCTestCase {
             // Missing "type" field
         ]
 
-        let encryptTokenRequest = EncryptToken(tokenRequests: tokenRequestWithoutType, publicKey: publicKey, keyId: keyId)
+        let encryptTokenRequest = EncryptTokenRequest(tokenRequests: tokenRequestWithoutType, publicKey: publicKey, keyId: keyId)
 
-        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)) { error in
+        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
             XCTAssertTrue(error is TokenizingError)
             if case TokenizingError.invalidInput = error {
                 // Expected error
@@ -147,9 +147,9 @@ final class JWEEncryptionTests: XCTestCase {
             // Missing "data" field
         ]
 
-        let encryptTokenRequest = EncryptToken(tokenRequests: tokenRequestWithoutData, publicKey: publicKey, keyId: keyId)
+        let encryptTokenRequest = EncryptTokenRequest(tokenRequests: tokenRequestWithoutData, publicKey: publicKey, keyId: keyId)
 
-        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)) { error in
+        XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
             XCTAssertTrue(error is TokenizingError)
             if case TokenizingError.invalidInput = error {
                 // Expected error

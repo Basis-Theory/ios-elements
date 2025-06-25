@@ -103,13 +103,12 @@ final public class BasisTheoryElements {
         }
     }
     
-    public static func encryptToken(encryptToken: EncryptToken) throws -> [EncryptTokenResponse] {
-        let recipientPublicKey = try JWEEncryption.createJWK(from: encryptToken.publicKey)
-        var responses: [EncryptTokenResponse] = []
+    public static func encryptToken(input: EncryptTokenRequest) throws -> [EncryptTokenResponse] {
+        let recipientPublicKey = try JWEEncryption.createJWK(from: input.publicKey)
         
         // Convert both cases to an array of token requests
         let tokenRequestsArray: [[String: Any]]
-        switch encryptToken.tokenRequests {
+        switch input.tokenRequests {
         case .single(let singleRequest):
             tokenRequestsArray = [singleRequest]
         case .multiple(let multipleRequests):
@@ -117,13 +116,12 @@ final public class BasisTheoryElements {
         }
         
         // Process each token request
-        for tokenRequest in tokenRequestsArray {
-            let encryptedResponse = try encryptSingleToken(
-        tokenRequest: tokenRequest,
+        let responses = try tokenRequestsArray.map { tokenRequest in
+            try encryptSingleToken(
+                tokenRequest: tokenRequest,
                 recipientPublicKey: recipientPublicKey,
-                keyId: encryptToken.keyId
+                keyId: input.keyId
             )
-            responses.append(encryptedResponse)
         }
         
         TelemetryLogging.info("Successful token encryption", attributes: [

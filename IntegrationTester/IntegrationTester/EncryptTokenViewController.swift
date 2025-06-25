@@ -47,14 +47,14 @@ class EncryptTokenViewController: UIViewController {
             "type": "card"
         ]
         
-        let encryptTokenRequest = EncryptToken(
+        let encryptTokenRequest = EncryptTokenRequest(
             tokenRequests: cardTokenRequest,
             publicKey: publicKey,
             keyId: keyId
         )
         
         do {
-            let encryptedResponses = try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)
+            let encryptedResponses = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
             
             // Display the encrypted result
             var outputText = "Encrypted Token:\n\n"
@@ -101,14 +101,14 @@ class EncryptTokenViewController: UIViewController {
             ]
         ]
         
-        let encryptTokenRequest = EncryptToken(
+        let encryptTokenRequest = EncryptTokenRequest(
             tokenRequests: multipleTokenRequests,
             publicKey: publicKey,
             keyId: keyId
         )
         
         do {
-            let encryptedResponses = try BasisTheoryElements.encryptToken(encryptToken: encryptTokenRequest)
+            let encryptedResponses = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
             
             // Display the encrypted results
             var outputText = "Multiple Encrypted Tokens (\(encryptedResponses.count)):\n\n"
