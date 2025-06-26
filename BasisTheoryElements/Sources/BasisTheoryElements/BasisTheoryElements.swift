@@ -102,7 +102,7 @@ final public class BasisTheoryElements {
         }
     }
     
-    public static func encryptToken(input: EncryptTokenRequest) throws -> [EncryptTokenResponse] {
+public static func encryptToken(input: EncryptTokenRequest) throws -> [EncryptTokenResponse] {
         // Convert both cases to an array of token requests
         let tokenRequestsArray: [[String: Any]]
         switch input.tokenRequests {
@@ -148,7 +148,7 @@ final public class BasisTheoryElements {
 
         let jsonData = try JSONSerialization.data(withJSONObject: dataField, options: [])
 
-        let encryptedString = try JWEEncryptionCryptoKit.encrypt(
+        let encryptedString = try JWEEncryption.encrypt(
             payload: jsonData,
             recipientPublicKey: recipientPublicKey,
             keyId: keyId

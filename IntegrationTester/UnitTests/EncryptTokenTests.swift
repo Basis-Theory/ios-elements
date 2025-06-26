@@ -86,7 +86,7 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: "invalid-key", keyId: keyId)
 
         XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
-            XCTAssertEqual(error as? JWEEncryptionCryptoKit.JWEError, JWEEncryptionCryptoKit.JWEError.invalidPublicKey)
+            XCTAssertEqual(error as? JWEEncryption.JWEError, JWEEncryption.JWEError.invalidPublicKey)
         }
     }
     
@@ -102,7 +102,7 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: "", keyId: keyId)
 
         XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
-            XCTAssertEqual(error as? JWEEncryptionCryptoKit.JWEError, JWEEncryptionCryptoKit.JWEError.invalidPublicKey)
+            XCTAssertEqual(error as? JWEEncryption.JWEError, JWEEncryption.JWEError.invalidPublicKey)
         }
     }
     
@@ -118,7 +118,7 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: publicKey, keyId: "")
 
          XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
-            XCTAssertEqual(error as? JWEEncryptionCryptoKit.JWEError, JWEEncryptionCryptoKit.JWEError.invalidKeyId)
+            XCTAssertEqual(error as? JWEEncryption.JWEError, JWEEncryption.JWEError.invalidKeyId)
         }
     }
     

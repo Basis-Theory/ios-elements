@@ -37,7 +37,7 @@ extension Data {
 }
 
 
-public class JWEEncryptionCryptoKit {
+public class JWEEncryption {
     public enum Constants {
         public static let keyType = "OKP"
         public static let curve = "X25519"
