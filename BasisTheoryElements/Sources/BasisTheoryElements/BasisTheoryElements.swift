@@ -9,7 +9,6 @@ import Foundation
 import BasisTheory
 import AnyCodable
 import Combine
-import JSONWebKey
 
 public enum TokenizingError: Error {
     case invalidApiKey
@@ -104,8 +103,6 @@ final public class BasisTheoryElements {
     }
     
     public static func encryptToken(input: EncryptTokenRequest) throws -> [EncryptTokenResponse] {
-        let recipientPublicKey = try JWEEncryption.createJWK(from: input.publicKey)
-        
         // Convert both cases to an array of token requests
         let tokenRequestsArray: [[String: Any]]
         switch input.tokenRequests {
@@ -119,7 +116,7 @@ final public class BasisTheoryElements {
         let responses = try tokenRequestsArray.map { tokenRequest in
             try encryptSingleToken(
                 tokenRequest: tokenRequest,
-                recipientPublicKey: recipientPublicKey,
+                recipientPublicKey: input.publicKey,
                 keyId: input.keyId
             )
         }
@@ -134,7 +131,7 @@ final public class BasisTheoryElements {
     
     private static func encryptSingleToken(
         tokenRequest: [String: Any],
-        recipientPublicKey: JWK,
+        recipientPublicKey: String,
         keyId: String
     ) throws -> EncryptTokenResponse {
         var mutableTokenRequest = tokenRequest
@@ -151,7 +148,7 @@ final public class BasisTheoryElements {
 
         let jsonData = try JSONSerialization.data(withJSONObject: dataField, options: [])
 
-        let encryptedString = try JWEEncryption.encrypt(
+        let encryptedString = try JWEEncryptionCryptoKit.encrypt(
             payload: jsonData,
             recipientPublicKey: recipientPublicKey,
             keyId: keyId

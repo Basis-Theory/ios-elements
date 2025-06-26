@@ -24,7 +24,8 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: publicKey, keyId: keyId)
 
         let encryptResponse = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
-
+    
+        print(encryptResponse)
         XCTAssertEqual(encryptResponse.count, 1)
         XCTAssertEqual(encryptResponse[0].type, "card")
         XCTAssertFalse(encryptResponse[0].encrypted.isEmpty)
@@ -85,7 +86,7 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: "invalid-key", keyId: keyId)
 
         XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
-            XCTAssertEqual(error as? JWEEncryption.JWKError, JWEEncryption.JWKError.invalidPublicKey)
+            XCTAssertEqual(error as? JWEEncryptionCryptoKit.JWEError, JWEEncryptionCryptoKit.JWEError.invalidPublicKey)
         }
     }
     
@@ -101,7 +102,7 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: "", keyId: keyId)
 
         XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
-            XCTAssertEqual(error as? JWEEncryption.JWKError, JWEEncryption.JWKError.invalidPublicKey)
+            XCTAssertEqual(error as? JWEEncryptionCryptoKit.JWEError, JWEEncryptionCryptoKit.JWEError.invalidPublicKey)
         }
     }
     
@@ -117,7 +118,7 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptTokenRequest = EncryptTokenRequest(tokenRequests: cardTokenRequest, publicKey: publicKey, keyId: "")
 
          XCTAssertThrowsError(try BasisTheoryElements.encryptToken(input: encryptTokenRequest)) { error in
-            XCTAssertEqual(error as? JWEEncryption.JWKError, JWEEncryption.JWKError.invalidKeyId)
+            XCTAssertEqual(error as? JWEEncryptionCryptoKit.JWEError, JWEEncryptionCryptoKit.JWEError.invalidKeyId)
         }
     }
     
