@@ -1,3 +1,11 @@
+## [4.3.0](https://github.com/Basis-Theory/ios-elements/compare/4.2.2...4.3.0) (2025-06-27)
+
+
+### Features
+
+* Add token encryption support ([#83](https://github.com/Basis-Theory/ios-elements/issues/83)) ([514ac85](https://github.com/Basis-Theory/ios-elements/commit/514ac854443467aa670b1326501e7d5faa2a247b))
+
+
 ### [4.2.2](https://github.com/Basis-Theory/ios-elements/compare/4.2.1...4.2.2) (2025-02-05)
 
 
