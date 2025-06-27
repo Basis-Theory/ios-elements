@@ -1,25 +1,24 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "AnyCodable",
-        "repositoryURL": "https://github.com/Flight-School/AnyCodable",
-        "state": {
-          "branch": null,
-          "revision": "862808b2070cd908cb04f9aafe7de83d35f81b05",
-          "version": "0.6.7"
-        }
-      },
-      {
-        "package": "BasisTheory",
-        "repositoryURL": "https://github.com/Basis-Theory/basistheory-swift",
-        "state": {
-          "branch": null,
-          "revision": "0e02cf3d09cf79b30ca130acc112f4be264aa53c",
-          "version": "0.7.0"
-        }
+  "originHash" : "43aa5062fdc74d07bf9d7721ebee3347e035722d355a22534877f3e56eb7efff",
+  "pins" : [
+    {
+      "identity" : "anycodable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Flight-School/AnyCodable",
+      "state" : {
+        "revision" : "862808b2070cd908cb04f9aafe7de83d35f81b05",
+        "version" : "0.6.7"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "basistheory-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Basis-Theory/basistheory-swift",
+      "state" : {
+        "revision" : "0e02cf3d09cf79b30ca130acc112f4be264aa53c",
+        "version" : "0.7.0"
+      }
+    }
+  ],
+  "version" : 3
 }
