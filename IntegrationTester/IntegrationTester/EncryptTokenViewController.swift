@@ -54,14 +54,24 @@ class EncryptTokenViewController: UIViewController {
         )
         
         do {
-            let encryptedResponses = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
+            let encryptResponse = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
             
             // Display the encrypted result
             var outputText = "Encrypted Token:\n\n"
-            for (index, response) in encryptedResponses.enumerated() {
-                outputText += "Token \(index + 1):\n"
-                outputText += "Type: \(response.type)\n"
-                outputText += "Encrypted: \(response.encrypted)\n\n"
+            
+            // Handle structured response
+            switch encryptResponse {
+            case .single(let encryptedToken):
+                outputText += "Type: \(encryptedToken.type)\n"
+                outputText += "Encrypted: \(encryptedToken.encrypted)\n\n"
+                
+            case .multiple(let encryptedTokens):
+                outputText += "Multiple tokens found:\n"
+                for (tokenName, encryptedToken) in encryptedTokens {
+                    outputText += "\(tokenName):\n"
+                    outputText += "  Type: \(encryptedToken.type)\n"
+                    outputText += "  Encrypted: \(encryptedToken.encrypted)\n\n"
+                }
             }
             
             self.output.text = outputText
@@ -108,14 +118,25 @@ class EncryptTokenViewController: UIViewController {
         )
         
         do {
-            let encryptedResponses = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
+            let encryptResponse = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
             
-            // Display the encrypted results
-            var outputText = "Multiple Encrypted Tokens (\(encryptedResponses.count)):\n\n"
-            for (index, response) in encryptedResponses.enumerated() {
-                outputText += "Token \(index + 1):\n"
-                outputText += "Type: \(response.type)\n"
-                outputText += "Encrypted: \(response.encrypted.prefix(50))...\n\n"
+            // Display the encrypted result
+            var outputText = "Encrypted Tokens:\n\n"
+            
+            // Handle structured response
+            switch encryptResponse {
+            case .single(let encryptedToken):
+                outputText += "Single token:\n"
+                outputText += "Type: \(encryptedToken.type)\n"
+                outputText += "Encrypted: \(encryptedToken.encrypted)\n\n"
+                
+            case .multiple(let encryptedTokens):
+                outputText += "Multiple tokens encrypted:\n\n"
+                for (tokenName, encryptedToken) in encryptedTokens {
+                    outputText += "\(tokenName):\n"
+                    outputText += "  Type: \(encryptedToken.type)\n"
+                    outputText += "  Encrypted: \(encryptedToken.encrypted.prefix(50))...\n\n"
+                }
             }
             
             self.output.text = outputText
