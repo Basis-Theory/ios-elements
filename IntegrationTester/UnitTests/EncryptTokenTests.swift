@@ -26,9 +26,17 @@ final class JWEEncryptionTests: XCTestCase {
         let encryptResponse = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
     
         print(encryptResponse)
-        XCTAssertEqual(encryptResponse.count, 1)
-        XCTAssertEqual(encryptResponse[0].type, "card")
-        XCTAssertFalse(encryptResponse[0].encrypted.isEmpty)
+        
+        // Verify single token response with structured type
+        switch encryptResponse {
+        case .single(let encryptedToken):
+            XCTAssertEqual(encryptedToken.type, "card")
+            XCTAssertFalse(encryptedToken.encrypted.isEmpty)
+            XCTAssertTrue(encryptedToken.encrypted.contains(".")) // Should contain JWE separators
+            
+        case .multiple(_):
+            XCTFail("Expected single token response")
+        }
     }
     
     func testEncryptMultipleTokens() throws {
@@ -62,15 +70,31 @@ final class JWEEncryptionTests: XCTestCase {
 
         let encryptResponse = try BasisTheoryElements.encryptToken(input: encryptTokenRequest)
 
-        XCTAssertEqual(encryptResponse.count, 3)
-        
-        // Verify all responses have encrypted data and correct types
-        let types = Set(encryptResponse.map { $0.type })
-        XCTAssertEqual(types, Set(["card", "bank", "token"]))
-        
-        for response in encryptResponse {
-            XCTAssertFalse(response.encrypted.isEmpty)
-            XCTAssertTrue(response.encrypted.contains(".")) // Should contain JWE separators
+        // Verify multiple token response with structured types
+        switch encryptResponse {
+        case .single(_):
+            XCTFail("Expected multiple token response")
+            
+        case .multiple(let encryptedTokens):
+            XCTAssertEqual(encryptedTokens.count, 3)
+            
+            // Check each token with structured type
+            for (tokenName, encryptedToken) in encryptedTokens {
+                XCTAssertFalse(encryptedToken.encrypted.isEmpty)
+                XCTAssertTrue(encryptedToken.encrypted.contains(".")) // Should contain JWE separators
+                
+                // Verify token names and types
+                switch tokenName {
+                case "creditCard":
+                    XCTAssertEqual(encryptedToken.type, "card")
+                case "bankAccount":
+                    XCTAssertEqual(encryptedToken.type, "bank")
+                case "personalInfo":
+                    XCTAssertEqual(encryptedToken.type, "token")
+                default:
+                    XCTFail("Unexpected token name: \(tokenName)")
+                }
+            }
         }
     }
     

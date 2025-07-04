@@ -4,6 +4,7 @@
 	classes = {
 	};
 	objectVersion = 60;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +19,7 @@
 		646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646506012DC9490300660095 /* EncryptTokenTests.swift */; };
 		649C178B2E09CEAD008ED08F /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 649C178A2E09CEAD008ED08F /* BasisTheoryElements */; };
 		649C178D2E0B3771008ED08F /* EncryptTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */; };
+		64A7FE5C2E188F730061FE69 /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 64A7FE5B2E188F730061FE69 /* BasisTheoryElements */; };
 		9206601D2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */; };
 		921217F12A05C3E6008272E3 /* FailingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */; };
 		921217F32A05C6E2008272E3 /* SucceedingDelegateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */; };
@@ -73,6 +75,8 @@
 		6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCardElementsUITextFieldTests.swift; sourceTree = "<group>"; };
 		646506012DC9490300660095 /* EncryptTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenTests.swift; sourceTree = "<group>"; };
 		649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenViewController.swift; sourceTree = "<group>"; };
+		646506012DC9490300660095 /* EncryptTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenTests.swift; sourceTree = "<group>"; };
+		649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenViewController.swift; sourceTree = "<group>"; };
 		9206601C2922813C00A92A81 /* CardVerificationCodeUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVerificationCodeUITextFieldTests.swift; sourceTree = "<group>"; };
 		921217F02A05C3E6008272E3 /* FailingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailingDelegateViewController.swift; sourceTree = "<group>"; };
 		921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SucceedingDelegateViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				643ACBE42E0D973C00B8305C /* BasisTheoryElements in Frameworks */,
+				64A7FE5C2E188F730061FE69 /* BasisTheoryElements in Frameworks */,
 				649C178B2E09CEAD008ED08F /* BasisTheoryElements in Frameworks */,
 				643ACBE12E0D965B00B8305C /* BasisTheoryElements in Frameworks */,
 			);
@@ -160,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */,
+				649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */,
 				9245768828FF46C100A01E70 /* AppDelegate.swift */,
 				92A24DE6291DA1F0005DD4D2 /* SplitCardElementsViewController.swift */,
 				9245768C28FF46C100A01E70 /* TextElementUITextFieldViewController.swift */,
@@ -172,6 +178,7 @@
 				921217F22A05C6E2008272E3 /* SucceedingDelegateViewController.swift */,
 				0A363AF12A1D74AE00DA5E69 /* RawProxyResponseViewController.swift */,
 				9245768A28FF46C100A01E70 /* SceneDelegate.swift */,
+				9245768A28FF46C100A01E70 /* SceneDelegate.swift */,
 				0AB4378F2A4C9FB4000099CD /* HttpClientViewController.swift */,
 			);
 			path = IntegrationTester;
@@ -180,6 +187,7 @@
 		9245769E28FF46C200A01E70 /* UnitTests */ = {
 			isa = PBXGroup;
 			children = (
+				646506012DC9490300660095 /* EncryptTokenTests.swift */,
 				646506012DC9490300660095 /* EncryptTokenTests.swift */,
 				929E30C22948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift */,
 				9253E8E1291EB66E00FDF1A9 /* ElementUITextFieldTests.swift */,
@@ -233,6 +241,7 @@
 				649C178A2E09CEAD008ED08F /* BasisTheoryElements */,
 				643ACBE02E0D965B00B8305C /* BasisTheoryElements */,
 				643ACBE32E0D973C00B8305C /* BasisTheoryElements */,
+				64A7FE5B2E188F730061FE69 /* BasisTheoryElements */,
 			);
 			productName = IntegrationTester;
 			productReference = 9245768528FF46C100A01E70 /* IntegrationTester.app */;
@@ -312,7 +321,7 @@
 			);
 			mainGroup = 9245767C28FF46C100A01E70;
 			packageReferences = (
-				643ACBE22E0D973C00B8305C /* XCLocalSwiftPackageReference "../../ios-elements" */,
+				64A7FE5A2E188F730061FE69 /* XCLocalSwiftPackageReference "../../ios-elements" */,
 			);
 			productRefGroup = 9245768628FF46C100A01E70 /* Products */;
 			projectDirPath = "";
@@ -367,6 +376,7 @@
 				9245768928FF46C100A01E70 /* AppDelegate.swift in Sources */,
 				921217F32A05C6E2008272E3 /* SucceedingDelegateViewController.swift in Sources */,
 				649C178D2E0B3771008ED08F /* EncryptTokenViewController.swift in Sources */,
+				649C178D2E0B3771008ED08F /* EncryptTokenViewController.swift in Sources */,
 				924576CC2900519900A01E70 /* Configuration.swift in Sources */,
 				9245768B28FF46C100A01E70 /* SceneDelegate.swift in Sources */,
 				0AB437902A4C9FB4000099CD /* HttpClientViewController.swift in Sources */,
@@ -387,6 +397,7 @@
 				929E30C32948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift in Sources */,
 				92B7DCAF2939523C000DBB8A /* CardBrandTests.swift in Sources */,
 				428CB1062937C53000C8220E /* CardExpirationDateUITextFieldTests.swift in Sources */,
+				646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */,
 				646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */,
 				924576A028FF46C200A01E70 /* TextElementUITextFieldTests.swift in Sources */,
 				9253E8E2291EB66E00FDF1A9 /* ElementUITextFieldTests.swift in Sources */,
@@ -493,6 +504,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -548,6 +560,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -572,6 +585,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -601,6 +615,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -623,6 +638,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = basistheory.IntegrationTesterTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -641,6 +657,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = basistheory.IntegrationTesterTests;
@@ -744,7 +761,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		643ACBE22E0D973C00B8305C /* XCLocalSwiftPackageReference "../../ios-elements" */ = {
+		64A7FE5A2E188F730061FE69 /* XCLocalSwiftPackageReference "../../ios-elements" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../ios-elements";
 		};
@@ -764,6 +781,10 @@
 			productName = BasisTheoryElements;
 		};
 		649C178A2E09CEAD008ED08F /* BasisTheoryElements */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BasisTheoryElements;
+		};
+		64A7FE5B2E188F730061FE69 /* BasisTheoryElements */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BasisTheoryElements;
 		};

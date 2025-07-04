@@ -102,43 +102,60 @@ final public class BasisTheoryElements {
         }
     }
     
-public static func encryptToken(input: EncryptTokenRequest) throws -> [EncryptTokenResponse] {
-        // Convert both cases to an array of token requests
-        let tokenRequestsArray: [[String: Any]]
+    public static func encryptToken(input: EncryptTokenRequest) throws -> EncryptTokenResponse {
         switch input.tokenRequests {
         case .single(let singleRequest):
-            tokenRequestsArray = [singleRequest]
-        case .multiple(let multipleRequests):
-            tokenRequestsArray = Array(multipleRequests.values)
-        }
-        
-        // Process each token request
-        let responses = try tokenRequestsArray.map { tokenRequest in
-            try encryptSingleToken(
-                tokenRequest: tokenRequest,
+            // Handle single token request - return structured type
+            let encryptedData = try encryptSingleTokenData(
+                tokenRequest: singleRequest,
                 recipientPublicKey: input.publicKey,
                 keyId: input.keyId
             )
+            
+            guard let type = singleRequest["type"] as? String else {
+                throw TokenizingError.invalidInput
+            }
+            
+            TelemetryLogging.info("Successful single token encryption", attributes: [
+                "encryptionSuccess": true,
+                "tokenCount": 1
+            ])
+            
+            return .single(EncryptedToken(encrypted: encryptedData, type: type))
+            
+        case .multiple(let multipleRequests):
+            // Handle multiple token requests - return structured dictionary
+            var encryptedTokens: [String: EncryptedToken] = [:]
+            
+            for (tokenName, tokenRequest) in multipleRequests {
+                let encryptedData = try encryptSingleTokenData(
+                    tokenRequest: tokenRequest,
+                    recipientPublicKey: input.publicKey,
+                    keyId: input.keyId
+                )
+                
+                guard let type = tokenRequest["type"] as? String else {
+                    throw TokenizingError.invalidInput
+                }
+                
+                encryptedTokens[tokenName] = EncryptedToken(encrypted: encryptedData, type: type)
+            }
+            
+            TelemetryLogging.info("Successful multiple token encryption", attributes: [
+                "encryptionSuccess": true,
+                "tokenCount": encryptedTokens.count
+            ])
+            
+            return .multiple(encryptedTokens)
         }
-        
-        TelemetryLogging.info("Successful token encryption", attributes: [
-            "encryptionSuccess": true,
-            "tokenCount": responses.count
-        ])
-        
-        return responses
     }
     
-    private static func encryptSingleToken(
+    private static func encryptSingleTokenData(
         tokenRequest: [String: Any],
         recipientPublicKey: String,
         keyId: String
-    ) throws -> EncryptTokenResponse {
+    ) throws -> String {
         var mutableTokenRequest = tokenRequest
-        
-        guard let type = tokenRequest["type"] as? String else {
-            throw TokenizingError.invalidInput
-        }
         
         try replaceElementRefs(body: &mutableTokenRequest, endpoint: "LOCAL /encrypt-token", btTraceId: nil)
         
@@ -148,13 +165,11 @@ public static func encryptToken(input: EncryptTokenRequest) throws -> [EncryptTo
 
         let jsonData = try JSONSerialization.data(withJSONObject: dataField, options: [])
 
-        let encryptedString = try JWEEncryption.encrypt(
+        return try JWEEncryption.encrypt(
             payload: jsonData,
             recipientPublicKey: recipientPublicKey,
             keyId: keyId
         )
-        
-        return EncryptTokenResponse(encrypted: encryptedString, type: type)
     }
     
     public static func createToken(body: CreateToken, apiKey: String? = nil, completion: @escaping ((_ data: CreateTokenResponse?, _ error: Error?) -> Void)) -> Void {

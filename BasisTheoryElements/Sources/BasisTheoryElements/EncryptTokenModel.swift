@@ -39,10 +39,10 @@ public struct EncryptTokenRequest {
         self.publicKey = publicKey
         self.keyId = keyId
     }
-
 }
 
-public struct EncryptTokenResponse {
+
+public struct EncryptedToken {
     public let encrypted: String
     public let type: String
     
@@ -50,4 +50,12 @@ public struct EncryptTokenResponse {
         self.encrypted = encrypted
         self.type = type
     }
+}
+
+// EncryptTokenResponse can be either:
+// Single token: EncryptedToken
+// Multiple tokens: [String: EncryptedToken] where keys are token names
+public enum EncryptTokenResponse {
+    case single(EncryptedToken)
+    case multiple([String: EncryptedToken])
 } 
