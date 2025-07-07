@@ -1,3 +1,11 @@
+## [4.4.0](https://github.com/Basis-Theory/ios-elements/compare/4.3.0...4.4.0) (2025-07-07)
+
+
+### Features
+
+* returning token alias when encrypting multiple tokens ([#84](https://github.com/Basis-Theory/ios-elements/issues/84)) ([56b8993](https://github.com/Basis-Theory/ios-elements/commit/56b89931bfc16b0bab34bd5d864cce33603ca9b7))
+
+
 ## [4.3.0](https://github.com/Basis-Theory/ios-elements/compare/4.2.2...4.3.0) (2025-06-27)
 
 
