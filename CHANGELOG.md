@@ -1,3 +1,11 @@
+## [4.5.0](https://github.com/Basis-Theory/ios-elements/compare/4.4.0...4.5.0) (2025-07-24)
+
+
+### Features
+
+* adds token intents ([#85](https://github.com/Basis-Theory/ios-elements/issues/85)) ([677dadc](https://github.com/Basis-Theory/ios-elements/commit/677dadca76c9e9d5b69f12dd59cefaf9c4c585f0))
+
+
 ## [4.4.0](https://github.com/Basis-Theory/ios-elements/compare/4.3.0...4.4.0) (2025-07-07)
 
 
