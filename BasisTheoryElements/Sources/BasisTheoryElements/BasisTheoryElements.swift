@@ -95,7 +95,7 @@ final public class BasisTheoryElements {
             completion(nil, TokenizingError.invalidInput) // error logged with more detail in replaceElementRefs
             return
         }
-
+        
         BasisTheoryAPI.basePath = basePath
         TokenizeAPI.tokenizeWithRequestBuilder(body: AnyCodable(mutableBody)).addBasisTheoryElementHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId).execute { result in
             completeApiRequest(endpoint: endpoint, btTraceId: btTraceId, result: result, completion: completion)
@@ -162,9 +162,9 @@ final public class BasisTheoryElements {
         guard let dataField = mutableTokenRequest["data"] else {
             throw TokenizingError.invalidInput
         }
-
+        
         let jsonData = try JSONSerialization.data(withJSONObject: dataField, options: [])
-
+        
         return try JWEEncryption.encrypt(
             payload: jsonData,
             recipientPublicKey: recipientPublicKey,
@@ -185,10 +185,10 @@ final public class BasisTheoryElements {
             completion(nil, TokenizingError.invalidInput) // error logged with more detail in replaceElementRefs
             return
         }
-
+        
         mutableBody.data = mutableData
-
-
+        
+        
         BasisTheoryAPI.basePath = basePath
         let createTokenRequest = mutableBody.toCreateTokenRequest()
         
@@ -196,6 +196,26 @@ final public class BasisTheoryElements {
             completeApiRequest(endpoint: endpoint, btTraceId: btTraceId, result: result, completion: completion)
         }
     }
+    
+    public static func createTokenIntent(
+        request: CreateTokenIntentRequest, apiKey: String? = nil,
+        completion: @escaping ((_ data: TokenIntent?, _ error: Error?) -> Void)
+    ) {
+        TelemetryLogging.info("Creating token intent")
+        
+        let client = TokenIntentClient(apiKey: getApiKey(apiKey), baseURL: basePath)
+        
+        client.createTokenIntent(request: request) { result in
+            switch result {
+            case .success(let tokenIntent):
+                completion(tokenIntent, nil)
+            case .failure(let error):
+                completion(nil, error)
+            }
+        }
+    }
+    
+    
     
     public static func proxy(apiKey: String? = nil, proxyKey: String? = nil, proxyUrl: String? = nil, proxyHttpRequest: ProxyHttpRequest? = nil, completion: @escaping ((_ request: URLResponse?, _ data: JSON?, _ error: Error?) -> Void)) -> Void {
         let endpoint = "\(proxyHttpRequest?.method?.rawValue ?? HttpMethod.get.rawValue) \(proxyHttpRequest?.url ?? "\(BasisTheoryElements.basePath)/proxy")"
@@ -318,7 +338,7 @@ final public class BasisTheoryElements {
                     
                     throw TokenizingError.invalidInput
                 }
-
+                
                 switch (v.getValueType) {
                 case .int:
                     body[key] = Int(textValue!)
@@ -331,7 +351,7 @@ final public class BasisTheoryElements {
                 case .none:
                     body[key] = textValue
                 }
-
+                
                 TelemetryLogging.info("Retrieving element value for API call", attributes: [
                     "elementId": v.elementId,
                     "endpoint": endpoint,
