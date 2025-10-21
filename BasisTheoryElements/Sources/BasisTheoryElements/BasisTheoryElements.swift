@@ -27,11 +27,17 @@ public enum HttpClientError: Error {
 
 extension RequestBuilder {
     func addBasisTheoryElementHeaders(apiKey: String, btTraceId: String) -> Self {
-        addHeaders([
+        var headers: [String: String] = [
             "User-Agent": "BasisTheory iOS Elements",
             "BT-API-KEY": apiKey,
             "BT-TRACE-ID": btTraceId
-        ])
+        ]
+        
+        if let deviceInfo = getEncodedDeviceInfo() {
+            headers["BT-DEVICE-INFO"] = deviceInfo
+        }
+        
+        addHeaders(headers)
         
         return self
     }

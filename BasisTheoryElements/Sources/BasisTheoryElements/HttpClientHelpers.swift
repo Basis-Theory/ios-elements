@@ -112,6 +112,10 @@ struct HttpClientHelpers {
             }
         }
         
+        if let encodedDeviceInfo = getEncodedDeviceInfo() {
+            request.setValue(encodedDeviceInfo, forHTTPHeaderField: "BT-DEVICE-INFO")
+        }
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             if let response = response {
