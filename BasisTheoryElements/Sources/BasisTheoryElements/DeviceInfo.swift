@@ -16,25 +16,16 @@ public struct DeviceInfo: Codable {
     let languages: [String]?
     let timeZone: String?
     let platform: String?
-    let screenWidth: Double?
-    let screenHeight: Double?
-    let innerWidth: Double?
-    let innerHeight: Double?
+    let screenWidthPixels: Double?
+    let screenHeightPixels: Double?
+    let innerWidthPoints: Double?
+    let innerHeightPoints: Double?
     let devicePixelRatio: Double?
-    
-    enum CodingKeys: String, CodingKey {
-        case uaBrands
-        case uaMobile
-        case uaPlatform
-        case uaPlatformVersion
-        case languages
-        case timeZone
-        case platform
-        case screenWidth
-        case screenHeight
-        case innerWidth
-        case innerHeight
-        case devicePixelRatio
+}
+
+extension DeviceInfo {
+    var encoded: String? {
+        try? JSONEncoder().encode(self).base64EncodedString()
     }
 }
 
@@ -43,7 +34,7 @@ public struct DeviceInfo: Codable {
 /// Returns nil if encoding fails
 public func getEncodedDeviceInfo() -> String? {
     let screen = UIScreen.main.bounds
-    let nativeScale = UIScreen.main.nativeScale
+    let scale = UIScreen.main.scale
     
     // Get iOS version
     let systemVersion = UIDevice.current.systemVersion
@@ -65,22 +56,12 @@ public func getEncodedDeviceInfo() -> String? {
         languages: preferredLanguages,
         timeZone: timeZone,
         platform: platform,
-        screenWidth: Double(screen.width * nativeScale),
-        screenHeight: Double(screen.height * nativeScale),
-        innerWidth: Double(screen.width),
-        innerHeight: Double(screen.height),
-        devicePixelRatio: Double(nativeScale)
+        screenWidthPixels: Double(screen.width * scale),
+        screenHeightPixels: Double(screen.height * scale),
+        innerWidthPoints: Double(screen.width),
+        innerHeightPoints: Double(screen.height),
+        devicePixelRatio: Double(scale)
     )
     
-    let encoder = JSONEncoder()
-    encoder.keyEncodingStrategy = .useDefaultKeys
-    
-    guard let jsonData = try? encoder.encode(deviceInfo) else {
-        return nil
-    }
-    
-    let encodedString = jsonData.base64EncodedString()
-    print("Encoded Device Info: \(encodedString)")
-    
-    return encodedString
+    return deviceInfo.encoded
 }
