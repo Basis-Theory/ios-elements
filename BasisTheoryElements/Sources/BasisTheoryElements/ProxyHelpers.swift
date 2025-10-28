@@ -55,6 +55,10 @@ struct ProxyHelpers {
             modifiedHeaders["BT-PROXY-URL"] = proxyUrl
             modifiedHeaders.removeValue(forKey: "BT-PROXY-KEY")
         }
+
+        if let encodedDeviceInfo = getEncodedDeviceInfo() {
+            modifiedHeaders["BT-DEVICE-INFO"] = encodedDeviceInfo
+        }
         
         for header in modifiedHeaders {
             request.setValue(header.value, forHTTPHeaderField: header.key)

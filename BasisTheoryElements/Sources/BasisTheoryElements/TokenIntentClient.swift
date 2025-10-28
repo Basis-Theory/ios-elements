@@ -24,6 +24,10 @@ public class TokenIntentClient {
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue(apiKey, forHTTPHeaderField: "BT-API-KEY")
 
+        if let encodedDeviceInfo = getEncodedDeviceInfo() {
+            urlRequest.setValue(encodedDeviceInfo, forHTTPHeaderField: "BT-DEVICE-INFO")
+        }
+
         // Create a mutable copy of the request data and replace element references
         var mutableData = request.data
         do {
