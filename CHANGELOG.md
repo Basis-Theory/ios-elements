@@ -1,3 +1,11 @@
+## [4.6.0](https://github.com/Basis-Theory/ios-elements/compare/4.5.0...4.6.0) (2025-10-28)
+
+
+### Features
+
+* eng-9140 expose device info ([#86](https://github.com/Basis-Theory/ios-elements/issues/86)) ([3746f9f](https://github.com/Basis-Theory/ios-elements/commit/3746f9fe79f19744417001ab961f53a1739c3e5d))
+
+
 ## [4.5.0](https://github.com/Basis-Theory/ios-elements/compare/4.4.0...4.5.0) (2025-07-24)
 
 
