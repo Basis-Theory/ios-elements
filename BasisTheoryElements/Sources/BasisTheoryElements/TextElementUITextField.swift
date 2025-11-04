@@ -88,7 +88,7 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
         self.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         self.addTarget(self, action: #selector(editingStarted), for: .editingDidBegin)
         self.addTarget(self, action: #selector(editingEnded), for: .editingDidEnd)
-        subject.send(ElementEvent(type: "ready", complete: true, empty: true, valid: true, maskSatisfied: false, details: []))
+        subject.send(ElementEvent(type: "ready", complete: true, empty: true, valid: true, maskSatisfied: false, details: [], binInfo: nil))
         TelemetryLogging.info("TextElementUITextField init", attributes: [
             "elementId": self.elementId
         ])
@@ -294,7 +294,7 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
         }
     }
     
-    @objc func textFieldDidChange() {
+    @objc func textFieldDidChange(forceEvent: Bool = false) {
         var maskComplete = true
         
         if let inputMask = inputMask {
@@ -319,7 +319,7 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
         
         self.isComplete = complete
         
-        var elementEvent = ElementEvent(type: "textChange", complete: complete, empty: transformedTextValue.isEmpty, valid: valid, maskSatisfied: maskComplete, details: [])
+        var elementEvent = ElementEvent(type: "textChange", complete: complete, empty: transformedTextValue.isEmpty, valid: valid, maskSatisfied: maskComplete, details: [], binInfo: nil)
         
         if let getElementEvent = getElementEvent {
             elementEvent = getElementEvent(transformedTextValue, elementEvent)
@@ -328,7 +328,7 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
         self.metadata = ElementMetadata(complete: elementEvent.complete, empty: elementEvent.empty, valid: elementEvent.valid, maskSatisfied: elementEvent.maskSatisfied)
         
         // prevents sending an additional event if input didn't change
-        if (previousValue == super.text) {
+        if !forceEvent && (previousValue == super.text) {
             return
         } else {
             previousValue = super.text!
@@ -343,13 +343,13 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
     }
     
     @objc func editingStarted() {
-        let event = ElementEvent(type: "focus", complete: self.metadata.complete, empty: self.metadata.empty, valid: self.metadata.valid, maskSatisfied: self.metadata.maskSatisfied, details: [])
+        let event = ElementEvent(type: "focus", complete: self.metadata.complete, empty: self.metadata.empty, valid: self.metadata.valid, maskSatisfied: self.metadata.maskSatisfied, details: [], binInfo: nil)
         
         subject.send(event);
     }
     
     @objc func editingEnded() {
-        let event = ElementEvent(type: "blur", complete: self.metadata.complete, empty: self.metadata.empty, valid: self.metadata.valid, maskSatisfied: self.metadata.maskSatisfied, details: [])
+        let event = ElementEvent(type: "blur", complete: self.metadata.complete, empty: self.metadata.empty, valid: self.metadata.valid, maskSatisfied: self.metadata.maskSatisfied, details: [], binInfo: nil)
         
         subject.send(event);
     }

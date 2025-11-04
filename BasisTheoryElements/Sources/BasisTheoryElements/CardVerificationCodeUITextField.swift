@@ -79,7 +79,7 @@ final public class CardVerificationCodeUITextField: TextElementUITextField {
         let complete = valid && maskSatisfied
         self.isComplete = complete
         
-        let elementEvent = ElementEvent(type: "textChange", complete: complete, empty: event.empty, valid: event.valid, maskSatisfied: maskSatisfied, details: [])
+        let elementEvent = ElementEvent(type: "textChange", complete: complete, empty: event.empty, valid: event.valid, maskSatisfied: maskSatisfied, details: [], binInfo: nil)
         
         TelemetryLogging.info("CardVerificationCodeUITextField textChange event", attributes: [
             "elementId": self.elementId,
@@ -135,7 +135,7 @@ final public class CardVerificationCodeUITextField: TextElementUITextField {
         let valid = validateCvc(text: text)
         let maskSatisfied = validateMaskLength(text: text)
         let complete = valid && maskSatisfied
-        let elementEvent = ElementEvent(type: "maskChange", complete: complete, empty: text?.isEmpty ?? false, valid: valid, maskSatisfied: maskSatisfied, details: [])
+        let elementEvent = ElementEvent(type: "maskChange", complete: complete, empty: text?.isEmpty ?? false, valid: valid, maskSatisfied: maskSatisfied, details: [], binInfo: nil)
         
         self.subject.send(elementEvent)
     }
