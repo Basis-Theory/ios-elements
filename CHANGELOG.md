@@ -1,3 +1,11 @@
+## [4.7.0](https://github.com/Basis-Theory/ios-elements/compare/4.6.0...4.7.0) (2025-11-07)
+
+
+### Features
+
+* add ability to do BIN lookups for cards for iOS ([#87](https://github.com/Basis-Theory/ios-elements/issues/87)) ([b838b0b](https://github.com/Basis-Theory/ios-elements/commit/b838b0b7188ee2061fba7ac9879096c1c0a170bd))
+
+
 ## [4.6.0](https://github.com/Basis-Theory/ios-elements/compare/4.5.0...4.6.0) (2025-10-28)
 
 
