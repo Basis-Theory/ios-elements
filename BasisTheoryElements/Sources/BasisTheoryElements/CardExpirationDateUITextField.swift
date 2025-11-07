@@ -134,7 +134,7 @@ final public class CardExpirationDateUITextField: TextElementUITextField {
         self.text = "\(formattedMonth)/\(formattedYear)"
     }
     
-    override func textFieldDidChange() {
+    override func textFieldDidChange(forceEvent: Bool = false) {
         if (super.getValue()!.count > 0) {
             let firstChar = super.getValue()?.first
             
@@ -154,7 +154,7 @@ final public class CardExpirationDateUITextField: TextElementUITextField {
             }
         }
         
-        super.textFieldDidChange()
+        super.textFieldDidChange(forceEvent: forceEvent)
     }
     
     override init(frame: CGRect) {

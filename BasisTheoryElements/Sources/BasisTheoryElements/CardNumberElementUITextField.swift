@@ -12,6 +12,9 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
     
     internal var cardBrand: CardBrandResults?
     private var cardMask: [Any]?
+    public var binLookup: Bool = false
+    private var binInfo: BinInfo?
+    private var lastBinLookup: String?
     
     override var getElementEvent: ((String?, ElementEvent) -> ElementEvent)? {
         get {
@@ -111,7 +114,7 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
             cardMetadata.cardBin = nil
         }
         
-        let elementEvent = ElementEvent(type: "textChange", complete: complete, empty: event.empty, valid: event.valid, maskSatisfied: maskSatisfied, details: details)
+        let elementEvent = ElementEvent(type: "textChange", complete: complete, empty: event.empty, valid: event.valid, maskSatisfied: maskSatisfied, details: details, binInfo: self.binInfo)
         
         TelemetryLogging.info("CardNumberUITextField textChange event", attributes: [
             "elementId": self.elementId,
@@ -160,6 +163,36 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         self.cardMask = mask
     }
     
+    private func performBinLookup(text: String?) {
+        guard let text = text, text.count >= 6 else {
+            if binInfo != nil {
+                binInfo = nil
+                lastBinLookup = nil
+                super.textFieldDidChange(forceEvent: true)
+            }
+            return
+        }
+        let bin = String(text.prefix(6))
+
+        guard bin != lastBinLookup else {
+            return
+        }
+
+        lastBinLookup = bin
+
+        BinLookup.getBinInfo(bin: bin, apiKey: BasisTheoryElements.apiKey) { [weak self] result, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.binInfo = nil
+                } else {
+                    self?.binInfo = result
+                }
+
+                self?.textFieldDidChange(forceEvent: true)
+            }
+        }
+    }
+
     override var inputTransform: ElementTransform? {
         get {
             let spaceRegex = try! NSRegularExpression(pattern: "[ \t]")
@@ -167,12 +200,12 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         }
         set { }
     }
-    
-    override func textFieldDidChange() {
+
+    override func textFieldDidChange(forceEvent: Bool = false) {
         if (super.getValue() != nil) {
             guard Int(super.getValue()!) != nil else {
                 cardBrand = nil
-                super.textFieldDidChange()
+                super.textFieldDidChange(forceEvent: forceEvent)
                 return
             }
             
@@ -181,11 +214,19 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
             if (cardBrand?.bestMatchCardBrand != nil) {
                 updateCardMask(mask: cardBrand?.bestMatchCardBrand?.cardNumberMaskInput)
             }
+
+            if binLookup {
+                performBinLookup(text: super.getValue())
+            }
         }
-        
-        super.textFieldDidChange()
+
+        super.textFieldDidChange(forceEvent: forceEvent)
     }
-    
+
+    public func triggerTextChange() {
+        textFieldDidChange()
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()

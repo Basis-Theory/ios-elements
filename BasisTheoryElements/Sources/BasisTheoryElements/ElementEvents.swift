@@ -19,6 +19,7 @@ public struct ElementEvent: Encodable {
     public var valid: Bool
     public var maskSatisfied: Bool
     public var details: [ElementEventDetails]
+    public var binInfo: BinInfo?
     
     func encode() throws -> [String: String?] {
         let encoder = JSONEncoder()

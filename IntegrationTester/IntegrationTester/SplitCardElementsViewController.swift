@@ -63,14 +63,20 @@ class SplitCardElementsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        let config = Configuration.getConfiguration()
+        BasisTheoryElements.apiKey = config.btApiKey ?? ""
+
         readOnlyTextField.setValueRef(element: cardNumberTextField)
         
         setStyles(textField: cardNumberTextField, placeholder: "Card Number")
         setStyles(textField: expirationDateTextField, placeholder: "MM/YY")
         setStyles(textField: cvcTextField, placeholder: "CVC")
         setStyles(textField: readOnlyTextField, placeholder: "Read Only")
-        
+
+        // Enable BIN lookup on card number field
+        cardNumberTextField.binLookup = true
+
         let cvcOptions = CardVerificationCodeOptions(cardNumberUITextField: cardNumberTextField)
         cvcTextField.setConfig(options: cvcOptions)
         
@@ -79,7 +85,7 @@ class SplitCardElementsViewController: UIViewController {
         } receiveValue: { message in
             print("cardNumber:")
             print(message)
-            
+
             if (!message.details.isEmpty) {
                 let brandDetails = message.details[0]
                 
