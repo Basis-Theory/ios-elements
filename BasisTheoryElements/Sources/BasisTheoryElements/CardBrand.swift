@@ -51,6 +51,23 @@ public struct CardBrandName {
     public static let mir = "mir"
     public static let hiper = "hiper"
     public static let hipercard = "hipercard"
+    public static let cartesBancaires = "cartes-bancaires"
+
+    public static let allBrandNames = [
+        visa,
+        mastercard,
+        americanExpress,
+        dinersClub,
+        discover,
+        jcb,
+        unionPay,
+        maestro,
+        elo,
+        mir,
+        hiper,
+        hipercard,
+        cartesBancaires
+    ]
 }
 
 

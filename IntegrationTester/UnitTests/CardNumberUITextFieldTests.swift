@@ -6,12 +6,12 @@
 //
 
 import XCTest
-import BasisTheoryElements
+@testable import BasisTheoryElements
 import BasisTheory
 import Combine
 
 final class CardNumberUITextFieldTests: XCTestCase {
-    private final var TIMEOUT_EXPECTATION = 10.0
+    private final var TIMEOUT_EXPECTATION = 20.0
 
     override func setUpWithError() throws {}
 
@@ -293,7 +293,6 @@ final class CardNumberUITextFieldTests: XCTestCase {
             }
         }.store(in: &cancellables)
         
-        // Type first 6 digits of a card (Visa test BIN)
         cardNumberTextField.text = "424242"
         
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
@@ -310,7 +309,7 @@ final class CardNumberUITextFieldTests: XCTestCase {
         var cancellables = Set<AnyCancellable>()
         cardNumberTextField.subject.sink { completion in
         } receiveValue: { message in
-            // Once we have 6+ digits and BIN lookup completes, binInfo should be present
+
             if let binInfo = message.binInfo {
                 XCTAssertNotNil(binInfo.brand)
                 XCTAssertNotNil(binInfo.funding)
@@ -318,8 +317,7 @@ final class CardNumberUITextFieldTests: XCTestCase {
                 binInfoExpectation.fulfill()
             }
         }.store(in: &cancellables)
-        
-        // Type a complete Visa card number
+
         cardNumberTextField.text = "4242424242424242"
         
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
@@ -343,20 +341,17 @@ final class CardNumberUITextFieldTests: XCTestCase {
                 hasSeenBinInfo = true
                 binInfoReceivedExpectation.fulfill()
                 
-                // Now clear the text to below 6 digits
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     print("DEBUG: Clearing text to 4242")
                     cardNumberTextField.text = "4242"
                 }
             }
             
-            // After clearing to less than 6 digits, binInfo should be nil
             if hasSeenBinInfo && message.binInfo == nil && !message.empty {
                 binInfoClearedExpectation.fulfill()
             }
         }.store(in: &cancellables)
         
-        // Type 6+ digits to trigger BIN lookup
         cardNumberTextField.text = "424242"
         
         waitForExpectations(timeout: 10.0)
@@ -367,23 +362,21 @@ final class CardNumberUITextFieldTests: XCTestCase {
         cardNumberTextField.binLookup = false
         BasisTheoryElements.basePath = "https://api.flock-dev.com"
         BasisTheoryElements.apiKey = Configuration.getConfiguration().btApiKey ?? ""
-        
+
         let noBinInfoExpectation = self.expectation(description: "No BinInfo when disabled")
-        
+
         var cancellables = Set<AnyCancellable>()
         cardNumberTextField.subject.sink { completion in
         } receiveValue: { message in
-            // binInfo should always be nil when binLookup is disabled
             XCTAssertNil(message.binInfo)
         }.store(in: &cancellables)
         
-        // Type a complete card number
         cardNumberTextField.text = "4242424242424242"
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             noBinInfoExpectation.fulfill()
         }
-        
+
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
     }
     
@@ -392,15 +385,14 @@ final class CardNumberUITextFieldTests: XCTestCase {
         cardNumberTextField.binLookup = true
         BasisTheoryElements.basePath = "https://api.flock-dev.com"
         BasisTheoryElements.apiKey = Configuration.getConfiguration().btApiKey ?? ""
-        
-        // Clear cache before test
+
         BinLookup.clearCache()
-        
+
         let firstLookupExpectation = self.expectation(description: "First BIN lookup")
         let secondLookupExpectation = self.expectation(description: "Second BIN lookup (cached)")
-        
+
         var lookupCount = 0
-        
+
         var cancellables = Set<AnyCancellable>()
         cardNumberTextField.subject.sink { completion in
             print(completion)
@@ -410,17 +402,14 @@ final class CardNumberUITextFieldTests: XCTestCase {
                 if lookupCount == 1 {
                     firstLookupExpectation.fulfill()
                 } else if lookupCount == 2 {
-                    // Second lookup should be instant (cached)
                     secondLookupExpectation.fulfill()
                 }
             }
         }.store(in: &cancellables)
-        
-        // First lookup
+
         cardNumberTextField.text = "424242"
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            // Clear and type same BIN again (should be cached)
             cardNumberTextField.text = ""
             cardNumberTextField.text = "424242"
         }
@@ -446,10 +435,137 @@ final class CardNumberUITextFieldTests: XCTestCase {
                 forceEventExpectation.fulfill()
             }
         }.store(in: &cancellables)
-        
-        // Type 6 digits to trigger BIN lookup
+
         cardNumberTextField.text = "424242"
         
+        waitForExpectations(timeout: TIMEOUT_EXPECTATION)
+    }
+
+    func testSelectedNetworkIncludedInEvents() {
+        let cardNumberTextField = CardNumberUITextField()
+        cardNumberTextField.binLookup = true
+        cardNumberTextField.coBadgedSupport = [.cartesBancaires]
+
+        let expectation = self.expectation(description: "Selected network included in event")
+
+        var cancellables = Set<AnyCancellable>()
+        cardNumberTextField.subject.sink { completion in
+        } receiveValue: { event in
+            if let selectedNetwork = event.selectedNetwork {
+                XCTAssertEqual(selectedNetwork, "VISA")
+                expectation.fulfill()
+            }
+        }.store(in: &cancellables)
+
+        cardNumberTextField.text = "4242424242424242"
+
+        NotificationCenter.default.post(
+            name: NSNotification.Name("CardBrandSelected"),
+            object: "VISA"
+        )
+
+        waitForExpectations(timeout: TIMEOUT_EXPECTATION)
+    }
+
+    func testSelectedNetworkClearedWhenBinInfoCleared() {
+        let cardNumberTextField = CardNumberUITextField()
+        cardNumberTextField.binLookup = true
+        cardNumberTextField.coBadgedSupport = [.cartesBancaires]
+
+        cardNumberTextField.text = "4242424242424242"
+
+        NotificationCenter.default.post(
+            name: NSNotification.Name("CardBrandSelected"),
+            object: "VISA"
+        )
+
+        XCTAssertEqual(cardNumberTextField.selectedNetwork, "VISA")
+
+        let expectation = self.expectation(description: "Selected network cleared")
+
+        var cancellables = Set<AnyCancellable>()
+        var eventReceived = false
+        cardNumberTextField.subject.sink { completion in
+        } receiveValue: { event in
+            if eventReceived && event.selectedNetwork == nil {
+                expectation.fulfill()
+            }
+            eventReceived = true
+        }.store(in: &cancellables)
+
+        cardNumberTextField.text = ""
+
+        waitForExpectations(timeout: TIMEOUT_EXPECTATION)
+    }
+
+    func testBrandOptionsNotificationSentWhenCoBadgedSupportConfigured() {
+        let cardNumberTextField = CardNumberUITextField()
+        cardNumberTextField.binLookup = true
+        cardNumberTextField.coBadgedSupport = [.cartesBancaires]
+
+        let expectation = self.expectation(description: "Brand options notification sent")
+
+        var cancellables = Set<AnyCancellable>()
+        NotificationCenter.default.publisher(for: NSNotification.Name("CardNumberBrandOptionsUpdated"))
+            .sink { notification in
+                if let brandOptions = notification.object as? [String] {
+                    XCTAssertTrue(brandOptions.contains("VISA"))
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+
+        cardNumberTextField.text = "424242"
+
+        waitForExpectations(timeout: TIMEOUT_EXPECTATION)
+    }
+
+    func testBrandOptionsNotificationNotSentWhenCoBadgedSupportEmpty() {
+        let cardNumberTextField = CardNumberUITextField()
+        cardNumberTextField.binLookup = true
+        cardNumberTextField.coBadgedSupport = []
+
+        let expectation = self.expectation(description: "Brand options notification should not be sent")
+        expectation.isInverted = true
+
+        var cancellables = Set<AnyCancellable>()
+        NotificationCenter.default.publisher(for: NSNotification.Name("CardNumberBrandOptionsUpdated"))
+            .sink { notification in
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        cardNumberTextField.text = "424242"
+
+        waitForExpectations(timeout: TIMEOUT_EXPECTATION)
+    }
+
+    func testSelectedNetworkPreservedAcrossTextChanges() {
+        let cardNumberTextField = CardNumberUITextField()
+        cardNumberTextField.binLookup = true
+        cardNumberTextField.coBadgedSupport = [.cartesBancaires]
+
+        cardNumberTextField.text = "424242424242"
+
+        NotificationCenter.default.post(
+            name: NSNotification.Name("CardBrandSelected"),
+            object: "VISA"
+        )
+
+        XCTAssertEqual(cardNumberTextField.selectedNetwork, "VISA")
+
+        let expectation = self.expectation(description: "Selected network preserved")
+
+        var cancellables = Set<AnyCancellable>()
+        cardNumberTextField.subject.sink { completion in
+        } receiveValue: { event in
+            if let selectedNetwork = event.selectedNetwork, selectedNetwork == "VISA" {
+                expectation.fulfill()
+            }
+        }.store(in: &cancellables)
+
+        cardNumberTextField.text = "4242424242424242"
+
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
     }
 }

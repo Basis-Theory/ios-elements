@@ -44,7 +44,3 @@ public struct BinInfo: Codable {
         self.additional = additional
     }
 }
-
-public enum CoBadgedSupport: String, Codable {
-    case cartesBancaires = "cartes-bancaires"
-}
