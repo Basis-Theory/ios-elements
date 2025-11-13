@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		023FB3392EC361D800CD88DF /* CardBrandSelectorUIButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023FB3372EC361D800CD88DF /* CardBrandSelectorUIButtonTests.swift */; };
+		023FB33A2EC361D800CD88DF /* CobadgeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023FB3382EC361D800CD88DF /* CobadgeIntegrationTests.swift */; };
 		0A363AF22A1D74AE00DA5E69 /* RawProxyResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A363AF12A1D74AE00DA5E69 /* RawProxyResponseViewController.swift */; };
 		0A58441E2E32C81800D61EAF /* TokenIntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A58441D2E32C81800D61EAF /* TokenIntentViewController.swift */; };
 		0A58441F2E32C81800D61EAF /* TokenIntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A58441D2E32C81800D61EAF /* TokenIntentViewController.swift */; };
@@ -71,6 +73,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		023FB3372EC361D800CD88DF /* CardBrandSelectorUIButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrandSelectorUIButtonTests.swift; sourceTree = "<group>"; };
+		023FB3382EC361D800CD88DF /* CobadgeIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CobadgeIntegrationTests.swift; sourceTree = "<group>"; };
 		0A363AF12A1D74AE00DA5E69 /* RawProxyResponseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawProxyResponseViewController.swift; sourceTree = "<group>"; };
 		0A58441D2E32C81800D61EAF /* TokenIntentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenIntentViewController.swift; sourceTree = "<group>"; };
 		0AB4378F2A4C9FB4000099CD /* HttpClientViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +193,8 @@
 		9245769E28FF46C200A01E70 /* UnitTests */ = {
 			isa = PBXGroup;
 			children = (
+				023FB3372EC361D800CD88DF /* CardBrandSelectorUIButtonTests.swift */,
+				023FB3382EC361D800CD88DF /* CobadgeIntegrationTests.swift */,
 				0AD41CA72E32C8D4002070F8 /* TokenIntentTests.swift */,
 				646506012DC9490300660095 /* EncryptTokenTests.swift */,
 				929E30C22948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift */,
@@ -400,6 +406,8 @@
 				929E30C32948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift in Sources */,
 				92B7DCAF2939523C000DBB8A /* CardBrandTests.swift in Sources */,
 				0AD41CA82E32C8D4002070F8 /* TokenIntentTests.swift in Sources */,
+				023FB3392EC361D800CD88DF /* CardBrandSelectorUIButtonTests.swift in Sources */,
+				023FB33A2EC361D800CD88DF /* CobadgeIntegrationTests.swift in Sources */,
 				428CB1062937C53000C8220E /* CardExpirationDateUITextFieldTests.swift in Sources */,
 				646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */,
 				646506022DC9490300660095 /* EncryptTokenTests.swift in Sources */,

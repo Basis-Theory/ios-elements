@@ -20,9 +20,10 @@ class SplitCardElementsViewController: UIViewController {
     @IBOutlet weak var cardNumberTextField: CardNumberUITextField!
     @IBOutlet weak var expirationDateTextField: CardExpirationDateUITextField!
     @IBOutlet weak var cvcTextField: CardVerificationCodeUITextField!
+    @IBOutlet weak var cardBrandSelector: CardBrandSelectorUIButton!
     @IBOutlet weak var output: UITextView!
     @IBOutlet weak var cardBrand: UITextView!
-    
+
     @IBAction func printToConsoleLog(_ sender: Any) {
         cardNumberTextField.text = "4242424242424242"
         expirationDateTextField.text = "10/26"
@@ -32,7 +33,7 @@ class SplitCardElementsViewController: UIViewController {
         print("expirationDateTextField.text: \(expirationDateTextField.text)")
         print("cvcTextField.text: \(cvcTextField.text)")
     }
-    
+
     @IBAction func tokenize(_ sender: Any) {
         let body: [String: Any] = [
             "data": [
@@ -43,7 +44,7 @@ class SplitCardElementsViewController: UIViewController {
             ],
             "type": "card"
         ]
-        
+
         // this next line is used for our own testing purposes. you can simply pass in your public API key into the tokenize request below
         let config = Configuration.getConfiguration()
         BasisTheoryElements.tokenize(body: body, apiKey: config.btApiKey!) { data, error in
@@ -68,7 +69,7 @@ class SplitCardElementsViewController: UIViewController {
         BasisTheoryElements.apiKey = config.btApiKey ?? ""
 
         readOnlyTextField.setValueRef(element: cardNumberTextField)
-        
+
         setStyles(textField: cardNumberTextField, placeholder: "Card Number")
         setStyles(textField: expirationDateTextField, placeholder: "MM/YY")
         setStyles(textField: cvcTextField, placeholder: "CVC")
@@ -79,7 +80,16 @@ class SplitCardElementsViewController: UIViewController {
 
         let cvcOptions = CardVerificationCodeOptions(cardNumberUITextField: cardNumberTextField)
         cvcTextField.setConfig(options: cvcOptions)
-        
+
+        // Configure cobadge support on CardNumberElement
+        cardNumberTextField.coBadgedSupport = [.cartesBancaires]
+
+        let brandSelectorOptions = CardBrandSelectorOptions(
+            cardNumberUITextField: cardNumberTextField
+        )
+
+        cardBrandSelector.setConfig(options: brandSelectorOptions)
+
         cardNumberTextField.subject.sink { completion in
             print(completion)
         } receiveValue: { message in
@@ -115,11 +125,11 @@ class SplitCardElementsViewController: UIViewController {
         textField.addTarget(self, action: #selector(didBeginEditing(_:)), for: .editingDidBegin)
         textField.addTarget(self, action: #selector(didEndEditing(_:)), for: .editingDidEnd)
     }
-    
+
     @objc private func didBeginEditing(_ textField: UITextField) {
         textField.backgroundColor = darkBackgroundColor
     }
-    
+
     @objc private func didEndEditing(_ textField: UITextField) {
         textField.backgroundColor = lightBackgroundColor
     }

@@ -46,10 +46,27 @@ internal protocol ElementReferenceProtocol {
     var elementId: String { get set }
 }
 
-public enum ElementConfigError: Error {
+public enum CoBadgedSupport: String, CaseIterable {
+    case cartesBancaires = "cartes-bancaires"
+
+    public static func validate(_ values: [String]) throws {
+        let validValues = CoBadgedSupport.allCases.map { $0.rawValue }
+        let invalidValues = values.filter { !validValues.contains($0) }
+
+        if !invalidValues.isEmpty {
+            throw ElementConfigError.invalidCoBadgedSupport(
+                message: "Invalid coBadgedSupport values: \(invalidValues.joined(separator: ", ")). " +
+                       "Valid values are: \(validValues.joined(separator: ", "))"
+            )
+        }
+    }
+}
+
+public enum ElementConfigError: Error, Equatable {
     case invalidMask
     case configNotAllowed
     case cardBrandAlreadyExists
+    case invalidCoBadgedSupport(message: String)
 }
 
 public class ElementValueReference: ElementReferenceProtocol {

@@ -20,6 +20,7 @@ public struct ElementEvent: Encodable {
     public var maskSatisfied: Bool
     public var details: [ElementEventDetails]
     public var binInfo: BinInfo?
+    public var selectedNetwork: String?
     
     func encode() throws -> [String: String?] {
         let encoder = JSONEncoder()

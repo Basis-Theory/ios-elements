@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -302,19 +303,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vqA-gB-ZZB" customClass="CardVerificationCodeUITextField" customModule="BasisTheoryElements">
-                                <rect key="frame" x="41" y="130" width="309" height="34"/>
+                                <rect key="frame" x="41" y="165" width="309" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9OB-9S-4ob" customClass="CardExpirationDateUITextField" customModule="BasisTheoryElements">
-                                <rect key="frame" x="41" y="88" width="309" height="34"/>
+                                <rect key="frame" x="41" y="123" width="309" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcT-S8-VFR">
-                                <rect key="frame" x="41" y="210" width="141" height="51"/>
+                                <rect key="frame" x="41" y="245" width="141" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Tokenize"/>
@@ -323,7 +324,7 @@
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qKC-eP-oxh">
-                                <rect key="frame" x="41" y="305" width="309" height="544"/>
+                                <rect key="frame" x="41" y="340" width="309" height="544"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
@@ -331,13 +332,13 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HIZ-Cg-Hjq" customClass="CardNumberUITextField" customModule="BasisTheoryElements">
-                                <rect key="frame" x="41" y="46" width="309" height="34"/>
+                                <rect key="frame" x="41" y="81" width="309" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="VhI-uu-QOW">
-                                <rect key="frame" x="75" y="177" width="240" height="33"/>
+                                <rect key="frame" x="75" y="212" width="240" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
@@ -345,7 +346,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ee0-0t-vSs">
-                                <rect key="frame" x="190" y="210" width="160" height="51"/>
+                                <rect key="frame" x="190" y="245" width="160" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Set Text"/>
@@ -354,11 +355,23 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fRO-gm-zCT" customClass="TextElementUITextField" customModule="BasisTheoryElements">
-                                <rect key="frame" x="41" y="281" width="309" height="34"/>
+                                <rect key="frame" x="41" y="316" width="309" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PyF-F6-fJD" customClass="CardBrandSelectorUIButton" customModule="BasisTheoryElements">
+                                <rect key="frame" x="41" y="38" width="309" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <menu key="menu" id="KOE-sS-kNd">
+                                    <children>
+                                        <command title="Item 1" id="4OA-eh-TT3"/>
+                                        <command title="Item 2" id="rbw-Te-RbQ"/>
+                                    </children>
+                                </menu>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Card Brand"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="627-3o-X4v"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -366,6 +379,7 @@
                     <navigationItem key="navigationItem" id="G1W-R6-TzL"/>
                     <connections>
                         <outlet property="cardBrand" destination="VhI-uu-QOW" id="Z2m-Gi-bBx"/>
+                        <outlet property="cardBrandSelector" destination="PyF-F6-fJD" id="yPm-ly-NLE"/>
                         <outlet property="cardNumberTextField" destination="HIZ-Cg-Hjq" id="Jx3-Yf-YYB"/>
                         <outlet property="cvcTextField" destination="vqA-gB-ZZB" id="q6X-4X-aam"/>
                         <outlet property="expirationDateTextField" destination="9OB-9S-4ob" id="oqo-vA-Zar"/>
@@ -375,7 +389,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WAN-47-by4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-674" y="408"/>
+            <point key="canvasLocation" x="-674.04580152671758" y="407.74647887323948"/>
         </scene>
         <!--Raw Proxy Response View Controller Scene-->
         <scene sceneID="zjO-eG-9dZ">
