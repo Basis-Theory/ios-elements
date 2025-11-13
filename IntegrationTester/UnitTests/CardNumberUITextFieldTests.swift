@@ -143,13 +143,13 @@ final class CardNumberUITextFieldTests: XCTestCase {
                     mastercardExpectationHasBeenFulfilled = true
                 } else {
                     XCTAssertEqual(message.complete, true)
-                    XCTAssertEqual(brandDetails.message, "americanExpress")
+                    XCTAssertEqual(brandDetails.message, "american-express")
                     XCTAssertEqual(last4Details.message, "8868")
                     XCTAssertEqual(binDetails.message, "348570")
                     
                     // assert metadata
                     XCTAssertEqual(cardNumberTextField.metadata.complete, true)
-                    XCTAssertEqual(cardNumberTextField.cardMetadata.cardBrand, "americanExpress")
+                    XCTAssertEqual(cardNumberTextField.cardMetadata.cardBrand, "american-express")
                     XCTAssertEqual(cardNumberTextField.cardMetadata.cardLast4, "8868")
                     XCTAssertEqual(cardNumberTextField.cardMetadata.cardBin, "348570")
                     validAmexCardNumberExpectation.fulfill()
