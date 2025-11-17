@@ -1,3 +1,11 @@
+## [4.8.0](https://github.com/Basis-Theory/ios-elements/compare/4.7.0...4.8.0) (2025-11-17)
+
+
+### Features
+
+* Add cobadge support to ios elements ([#88](https://github.com/Basis-Theory/ios-elements/issues/88)) ([a521604](https://github.com/Basis-Theory/ios-elements/commit/a5216049231fe6381789ff4128ee1f45d639fbae))
+
+
 ## [4.7.0](https://github.com/Basis-Theory/ios-elements/compare/4.6.0...4.7.0) (2025-11-07)
 
 
