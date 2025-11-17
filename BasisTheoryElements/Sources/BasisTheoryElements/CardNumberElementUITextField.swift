@@ -15,6 +15,8 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
     public var binLookup: Bool = false
     private var binInfo: BinInfo?
     private var lastBinLookup: String?
+    public var coBadgedSupport: [CoBadgedSupport]?
+    internal var selectedNetwork: String?
     
     override var getElementEvent: ((String?, ElementEvent) -> ElementEvent)? {
         get {
@@ -96,7 +98,9 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         }
         
         let maskSatisfied = cardBrand?.maskSatisfied ?? false
-        let complete = maskSatisfied && event.valid
+        let hasValidAdditionalBrands = getValidAdditionalBrands().count > 0
+        let needsBrandSelection = !(coBadgedSupport?.isEmpty ?? true) && hasValidAdditionalBrands && selectedNetwork == nil
+        let complete = maskSatisfied && event.valid && !needsBrandSelection
         self.isComplete = complete
         let brand = cardBrand?.bestMatchCardBrand?.cardBrandName != nil ? String(describing: cardBrand!.bestMatchCardBrand!.cardBrandName) : "unknown"
         var details = [ElementEventDetails(type: "cardBrand", message: brand)]
@@ -114,7 +118,16 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
             cardMetadata.cardBin = nil
         }
         
-        let elementEvent = ElementEvent(type: "textChange", complete: complete, empty: event.empty, valid: event.valid, maskSatisfied: maskSatisfied, details: details, binInfo: self.binInfo)
+        let elementEvent = ElementEvent(
+            type: "textChange",
+            complete: complete,
+            empty: event.empty,
+            valid: event.valid,
+            maskSatisfied: maskSatisfied,
+            details: details,
+            binInfo: self.binLookup ? self.binInfo : nil,
+            selectedNetwork: self.selectedNetwork
+        )
         
         TelemetryLogging.info("CardNumberUITextField textChange event", attributes: [
             "elementId": self.elementId,
@@ -188,7 +201,13 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
                     self?.binInfo = result
                 }
 
-                self?.textFieldDidChange(forceEvent: true)
+                if self?.binLookup == true {
+                    self?.textFieldDidChange(forceEvent: true)
+                }
+
+                if !(self?.coBadgedSupport?.isEmpty ?? true) {
+                    self?.updateBrandSelectorOptions()
+                }
             }
         }
     }
@@ -202,25 +221,94 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
     }
 
     override func textFieldDidChange(forceEvent: Bool = false) {
-        if (super.getValue() != nil) {
-            guard Int(super.getValue()!) != nil else {
-                cardBrand = nil
-                super.textFieldDidChange(forceEvent: forceEvent)
-                return
-            }
-            
-            cardBrand = CardBrand.getCardBrand(text: super.getValue())
-            
-            if (cardBrand?.bestMatchCardBrand != nil) {
-                updateCardMask(mask: cardBrand?.bestMatchCardBrand?.cardNumberMaskInput)
-            }
+        if (super.getValue() == nil) {
+            cardBrand = nil
+            clearBinInfo()
+            super.textFieldDidChange(forceEvent: forceEvent)
+            return
+        }
 
-            if binLookup {
-                performBinLookup(text: super.getValue())
-            }
+        guard Int(super.getValue()!) != nil else {
+            cardBrand = nil
+            clearBinInfo()
+            super.textFieldDidChange(forceEvent: forceEvent)
+            return
+        }
+
+        cardBrand = CardBrand.getCardBrand(text: super.getValue())
+
+        if (cardBrand?.bestMatchCardBrand != nil) {
+            updateCardMask(mask: cardBrand?.bestMatchCardBrand?.cardNumberMaskInput)
+        }
+
+        let text = super.getValue() ?? ""
+        if text.count >= 6 && (binLookup || !(coBadgedSupport?.isEmpty ?? true)) {
+            performBinLookup(text: text)
+        } else if text.count < 6 {
+            clearBinInfo()
         }
 
         super.textFieldDidChange(forceEvent: forceEvent)
+    }
+
+    private func getValidAdditionalBrands() -> [String] {
+        guard let binInfo = binInfo,
+              let coBadgedSupport = coBadgedSupport,
+              !coBadgedSupport.isEmpty else {
+            return []
+        }
+
+        let supportedRawValues = coBadgedSupport.map { $0.rawValue }
+        var validBrands: [String] = []
+
+        binInfo.additional?.forEach { additional in
+            let brandName = additional.brand
+
+            if isValidBrand(brandName, supportedBy: supportedRawValues) {
+                validBrands.append(brandName)
+            }
+        }
+
+        return validBrands
+    }
+
+    private func isValidBrand(_ brandName: String, supportedBy: [String]) -> Bool {
+        let normalizedBrandName = brandName.lowercased().replacingOccurrences(of: " ", with: "-")
+
+        let isValid = CardBrandName.allBrandNames.contains(normalizedBrandName)
+
+        let isSupported = supportedBy.contains(normalizedBrandName)
+
+        return isValid && isSupported
+    }
+
+    public func updateBrandSelectorOptions() {
+        guard let binInfo = binInfo else { return }
+
+        var brands: [String] = []
+        brands.append(binInfo.brand)
+        let additionalBrands = getValidAdditionalBrands()
+        brands.append(contentsOf: additionalBrands)
+
+        NotificationCenter.default.post(
+            name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
+            object: brands
+        )
+    }
+
+    internal func clearBinInfo() {
+        guard binInfo != nil || selectedNetwork != nil else { return }
+
+        binInfo = nil
+        selectedNetwork = nil
+        lastBinLookup = nil
+
+        if !(coBadgedSupport?.isEmpty ?? true) {
+            NotificationCenter.default.post(
+                name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
+                object: []
+            )
+        }
     }
 
     public func triggerTextChange() {
@@ -231,16 +319,31 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         super.init(frame: frame)
         setup()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
     }
-    
+
     private func setup() {
         self.keyboardType = .asciiCapableNumberPad
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(brandSelected(_:)),
+            name: NSNotification.Name("CardBrandSelected"),
+            object: nil
+        )
+
         TelemetryLogging.info("CardNumberUITextField init", attributes: [
             "elementId": self.elementId
         ])
+    }
+
+    @objc private func brandSelected(_ notification: Notification) {
+        if let brandName = notification.object as? String {
+            selectedNetwork = brandName
+            textFieldDidChange(forceEvent: true)
+        }
     }
 }

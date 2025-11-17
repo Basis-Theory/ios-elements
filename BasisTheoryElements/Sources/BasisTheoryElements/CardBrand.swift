@@ -41,16 +41,33 @@ public struct CardBrandResults {
 public struct CardBrandName {
     public static let visa = "visa"
     public static let mastercard = "mastercard"
-    public static let americanExpress = "americanExpress"
-    public static let dinersClub = "dinersClub"
+    public static let americanExpress = "american-express"
+    public static let dinersClub = "diners-club"
     public static let discover = "discover"
     public static let jcb = "jcb"
-    public static let unionPay = "unionPay"
+    public static let unionPay = "union-pay"
     public static let maestro = "maestro"
     public static let elo = "elo"
     public static let mir = "mir"
     public static let hiper = "hiper"
     public static let hipercard = "hipercard"
+    public static let cartesBancaires = "cartes-bancaires"
+
+    public static let allBrandNames = [
+        visa,
+        mastercard,
+        americanExpress,
+        dinersClub,
+        discover,
+        jcb,
+        unionPay,
+        maestro,
+        elo,
+        mir,
+        hiper,
+        hipercard,
+        cartesBancaires
+    ]
 }
 
 
