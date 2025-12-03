@@ -13,10 +13,12 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
     internal var cardBrand: CardBrandResults?
     private var cardMask: [Any]?
     public var binLookup: Bool = false
+    private var rawBinInfo: BinInfo?
     private var binInfo: BinInfo?
     private var lastBinLookup: String?
     public var coBadgedSupport: [CoBadgedSupport]?
     internal var selectedNetwork: String?
+    private var lastBrandOptions: [String] = []
     
     override var getElementEvent: ((String?, ElementEvent) -> ElementEvent)? {
         get {
@@ -89,6 +91,54 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
             regexDigit
         ]
     }
+
+    private func getFilteredBinInfo() -> BinInfo? {
+        let text = super.getValue() ?? ""
+
+        guard let binInfo = rawBinInfo  else {
+            return nil
+        }
+
+        let cardValue = text
+        let primaryRanges = binInfo.binRange ?? []
+
+        let isValidPrimaryRange = primaryRanges.contains { range in
+            let binLength = min(range.binMin.count, cardValue.count)
+            let cardBin = Int(String(cardValue.prefix(binLength))) ?? 0
+            let binMin = Int(String(range.binMin.prefix(binLength))) ?? 0
+            let binMax = Int(String(range.binMax.prefix(binLength))) ?? 0
+            return binMin <= cardBin && cardBin <= binMax
+        }
+
+        let additionals = binInfo.additional?.filter { additional in
+            guard let ranges = additional.binRange else { return false }
+            return ranges.contains { range in
+                let binLength = min(range.binMin.count, cardValue.count)
+                let cardBin = Int(String(cardValue.prefix(binLength))) ?? 0
+                let binMin = Int(String(range.binMin.prefix(binLength))) ?? 0
+                let binMax = Int(String(range.binMax.prefix(binLength))) ?? 0
+                return binMin <= cardBin && cardBin <= binMax
+            }
+        }
+
+        if !isValidPrimaryRange && additionals?.isEmpty ?? true {
+            return nil
+        }
+
+        return BinInfo(
+            brand: isValidPrimaryRange ? binInfo.brand : nil,
+            funding: isValidPrimaryRange ? binInfo.funding : nil,
+            issuer: isValidPrimaryRange ? binInfo.issuer : nil,
+            segment: isValidPrimaryRange ? binInfo.segment : nil,
+            additional: additionals?.map { additional in
+                CardInfo(
+                    brand: additional.brand,
+                    funding: additional.funding,
+                    issuer: additional.issuer
+                )
+            }
+        )
+    }
     
     private func getCardElementEvent(text: String?, event: ElementEvent) -> ElementEvent {
         cardBrand = CardBrand.getCardBrand(text: text)
@@ -98,7 +148,7 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         }
         
         let maskSatisfied = cardBrand?.maskSatisfied ?? false
-        let hasValidAdditionalBrands = getValidAdditionalBrands().count > 0
+        let hasValidAdditionalBrands = getBrandOptions().count > 1
         let needsBrandSelection = !(coBadgedSupport?.isEmpty ?? true) && hasValidAdditionalBrands && selectedNetwork == nil
         let complete = maskSatisfied && event.valid && !needsBrandSelection
         self.isComplete = complete
@@ -125,8 +175,8 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
             valid: event.valid,
             maskSatisfied: maskSatisfied,
             details: details,
-            binInfo: self.binLookup ? self.binInfo : nil,
-            selectedNetwork: self.selectedNetwork
+            binInfo: self.binLookup ? getFilteredBinInfo() : nil,
+            selectedNetwork: hasValidAdditionalBrands ? self.selectedNetwork : nil
         )
         
         TelemetryLogging.info("CardNumberUITextField textChange event", attributes: [
@@ -188,6 +238,9 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         let bin = String(text.prefix(6))
 
         guard bin != lastBinLookup else {
+            if !(self.coBadgedSupport?.isEmpty ?? true) {
+                self.updateBrandSelectorOptions()
+            }
             return
         }
 
@@ -196,17 +249,13 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         BinLookup.getBinInfo(bin: bin, apiKey: BasisTheoryElements.apiKey) { [weak self] result, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    self?.binInfo = nil
+                    self?.rawBinInfo = nil
                 } else {
-                    self?.binInfo = result
+                    self?.rawBinInfo = result
                 }
 
                 if self?.binLookup == true {
                     self?.textFieldDidChange(forceEvent: true)
-                }
-
-                if !(self?.coBadgedSupport?.isEmpty ?? true) {
-                    self?.updateBrandSelectorOptions()
                 }
             }
         }
@@ -251,59 +300,66 @@ final public class CardNumberUITextField: TextElementUITextField, CardElementPro
         super.textFieldDidChange(forceEvent: forceEvent)
     }
 
-    private func getValidAdditionalBrands() -> [String] {
-        guard let binInfo = binInfo,
-              let coBadgedSupport = coBadgedSupport,
-              !coBadgedSupport.isEmpty else {
-            return []
-        }
-
-        let supportedRawValues = coBadgedSupport.map { $0.rawValue }
-        var validBrands: [String] = []
-
-        binInfo.additional?.forEach { additional in
-            let brandName = additional.brand
-
-            if isValidBrand(brandName, supportedBy: supportedRawValues) {
-                validBrands.append(brandName)
-            }
-        }
-
-        return validBrands
+    private func normalizeBrandName(_ brandName: String) -> String {
+        return brandName.lowercased().replacingOccurrences(of: "_", with: "-")
     }
 
     private func isValidBrand(_ brandName: String, supportedBy: [String]) -> Bool {
-        let normalizedBrandName = brandName.lowercased().replacingOccurrences(of: " ", with: "-")
+        let isValid = CardBrandName.allBrandNames.contains(brandName)
 
-        let isValid = CardBrandName.allBrandNames.contains(normalizedBrandName)
-
-        let isSupported = supportedBy.contains(normalizedBrandName)
+        let isSupported = supportedBy.contains(brandName)
 
         return isValid && isSupported
     }
 
     public func updateBrandSelectorOptions() {
-        guard let binInfo = binInfo else { return }
+        let currentBrandOptions = getBrandOptions()
 
+        if currentBrandOptions != lastBrandOptions {
+            lastBrandOptions = currentBrandOptions
+            NotificationCenter.default.post(
+                name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
+                object: currentBrandOptions
+            )
+        }
+    }
+
+    internal func getBrandOptions() -> [String] {
+        guard let binInfo = getFilteredBinInfo() else { return [] }
         var brands: [String] = []
-        brands.append(binInfo.brand)
-        let additionalBrands = getValidAdditionalBrands()
-        brands.append(contentsOf: additionalBrands)
 
-        NotificationCenter.default.post(
-            name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
-            object: brands
-        )
+        if let brand = binInfo.brand {
+            brands.append(normalizeBrandName(brand))
+        }
+
+        guard let coBadgedSupport = coBadgedSupport,
+              !coBadgedSupport.isEmpty else {
+            return brands
+        }
+
+        let supportedRawValues = coBadgedSupport.map { $0.rawValue }
+
+        binInfo.additional?.forEach { additional in
+            let brandName = normalizeBrandName(additional.brand)
+
+            if isValidBrand(brandName, supportedBy: supportedRawValues) {
+                brands.append(brandName)
+            }
+        }
+
+        return brands
     }
 
     internal func clearBinInfo() {
-        guard binInfo != nil || selectedNetwork != nil else { return }
+        guard rawBinInfo != nil || selectedNetwork != nil else { return }
 
+        rawBinInfo = nil
         binInfo = nil
         selectedNetwork = nil
         lastBinLookup = nil
 
-        if !(coBadgedSupport?.isEmpty ?? true) {
+        if !(coBadgedSupport?.isEmpty ?? true) && !lastBrandOptions.isEmpty {
+            lastBrandOptions = []
             NotificationCenter.default.post(
                 name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
                 object: []

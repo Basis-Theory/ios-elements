@@ -52,23 +52,23 @@ final class CardBrandSelectorUIButtonTests: XCTestCase {
 
         NotificationCenter.default.post(
             name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
-            object: ["VISA"]
+            object: ["visa"]
         )
 
         XCTAssertTrue(cardBrandSelector.isHidden)
-        XCTAssertEqual(cardBrandSelector.availableBrands, ["VISA"])
+        XCTAssertEqual(cardBrandSelector.availableBrands, ["visa"])
     }
     
     func testBrandSelectorVisibleWithMultipleSupportedBrands() {
         NotificationCenter.default.post(
             name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
-            object: ["VISA", "CARTES BANCAIRES"]
+            object: ["visa", "cartes-bancaires"]
         )
 
         XCTAssertFalse(cardBrandSelector.isHidden)
         XCTAssertEqual(cardBrandSelector.availableBrands.count, 2)
-        XCTAssertTrue(cardBrandSelector.availableBrands.contains("VISA"))
-        XCTAssertTrue(cardBrandSelector.availableBrands.contains("CARTES BANCAIRES"))
+        XCTAssertTrue(cardBrandSelector.availableBrands.contains("visa"))
+        XCTAssertTrue(cardBrandSelector.availableBrands.contains("cartes-bancaires"))
     }
     
     func testBrandSelectorHiddenWithSingleBrand() {
@@ -84,7 +84,7 @@ final class CardBrandSelectorUIButtonTests: XCTestCase {
     func testBrandSelectionUpdatesSelectedBrand() {
         NotificationCenter.default.post(
             name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
-            object: ["VISA", "CARTES BANCAIRES"]
+            object: ["visa", "cartes-bancaires"]
         )
 
         let expectation = self.expectation(description: "Wait for notification processing")
@@ -94,10 +94,10 @@ final class CardBrandSelectorUIButtonTests: XCTestCase {
         waitForExpectations(timeout: 1.0)
 
         XCTAssertEqual(cardBrandSelector.availableBrands.count, 2)
-        XCTAssertTrue(cardBrandSelector.availableBrands.contains("VISA"))
-        XCTAssertTrue(cardBrandSelector.availableBrands.contains("CARTES BANCAIRES"))
+        XCTAssertTrue(cardBrandSelector.availableBrands.contains("visa"))
+        XCTAssertTrue(cardBrandSelector.availableBrands.contains("cartes-bancaires"))
 
-        cardBrandSelector.setSelectedBrand("CARTES BANCAIRES")
+        cardBrandSelector.setSelectedBrand("cartes-bancaires")
 
         let selectionExpectation = self.expectation(description: "Wait for selection processing")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -105,13 +105,13 @@ final class CardBrandSelectorUIButtonTests: XCTestCase {
         }
         waitForExpectations(timeout: 1.0)
 
-        XCTAssertEqual(cardBrandSelector.selectedBrand, "CARTES BANCAIRES")
+        XCTAssertEqual(cardBrandSelector.selectedBrand, "cartes-bancaires")
     }
     
     func testBrandSelectionSendsNotification() {
         NotificationCenter.default.post(
             name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
-            object: ["VISA", "CARTES BANCAIRES"]
+            object: ["visa", "cartes-bancaires"]
         )
 
         let expectation = self.expectation(description: "Brand selection notification received")
@@ -119,13 +119,13 @@ final class CardBrandSelectorUIButtonTests: XCTestCase {
         NotificationCenter.default.publisher(for: NSNotification.Name("CardBrandSelected"))
             .sink { notification in
                 if let brandName = notification.object as? String {
-                    XCTAssertEqual(brandName, "CARTES BANCAIRES")
+                    XCTAssertEqual(brandName, "cartes-bancaires")
                     expectation.fulfill()
                 }
             }
             .store(in: &cancellables)
 
-        cardBrandSelector.setSelectedBrand("CARTES BANCAIRES")
+        cardBrandSelector.setSelectedBrand("cartes-bancaires")
 
         waitForExpectations(timeout: 1.0)
     }
@@ -133,17 +133,17 @@ final class CardBrandSelectorUIButtonTests: XCTestCase {
     func testBrandSelectionTriggersCallback() {
         NotificationCenter.default.post(
             name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
-            object: ["VISA", "CARTES BANCAIRES"]
+            object: ["visa", "cartes-bancaires"]
         )
 
         let expectation = self.expectation(description: "Brand selection callback triggered")
 
         cardBrandSelector.onBrandSelection { selectedBrand in
-            XCTAssertEqual(selectedBrand, "CARTES BANCAIRES")
+            XCTAssertEqual(selectedBrand, "cartes-bancaires")
             expectation.fulfill()
         }
 
-        cardBrandSelector.setSelectedBrand("CARTES BANCAIRES")
+        cardBrandSelector.setSelectedBrand("cartes-bancaires")
 
         waitForExpectations(timeout: 1.0)
     }
@@ -151,7 +151,7 @@ final class CardBrandSelectorUIButtonTests: XCTestCase {
     func testBrandSelectorClearedWhenBinInfoCleared() {
         NotificationCenter.default.post(
             name: NSNotification.Name("CardNumberBrandOptionsUpdated"),
-            object: ["VISA", "CARTES BANCAIRES"]
+            object: ["visa", "cartes-bancaires"]
         )
 
         XCTAssertFalse(cardBrandSelector.isHidden)

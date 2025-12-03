@@ -75,37 +75,42 @@ final public class CardBrandSelectorUIButton: UIButton {
             object: nil
         )
     }
-    
+
+    private func getDisplayName(for brandKey: String) -> String {
+        return brandKey.uppercased().replacingOccurrences(of: "-", with: " ")
+    }
+
     private func updateBrandSelectionMenu() {
         guard availableBrands.count > 1 else {
             self.isHidden = true
             self.menu = nil
             return
         }
-        
+
         self.isHidden = false
-        
+
         var menuActions: [UIAction] = []
-        
-        for brandName in availableBrands {
-            let action = UIAction(title: brandName) { _ in
-                self.setSelectedBrand(brandName)
+
+        for brandKey in availableBrands {
+            let displayName = getDisplayName(for: brandKey)
+            let action = UIAction(title: displayName) { _ in
+                self.setSelectedBrand(brandKey)
             }
-            
-            if let selectedBrand = selectedBrand, selectedBrand == brandName {
+
+            if let selectedBrand = selectedBrand, selectedBrand == brandKey {
                 action.state = .on
             }
-            
+
             menuActions.append(action)
         }
-        
+
         let brandMenu = UIMenu(title: "Select Card Brand", children: menuActions)
         self.menu = brandMenu
     }
-    
+
     private func updateAvailableBrandsFromBrandOptions(_ brandOptions: [String]) {
         self.availableBrands = brandOptions
-        
+
         if brandOptions.isEmpty {
             self.isHidden = true
             self.setTitle(self.defaultTitle, for: .normal)
@@ -116,23 +121,24 @@ final public class CardBrandSelectorUIButton: UIButton {
         updateBrandSelectionMenu()
     }
     
-    internal func setSelectedBrand(_ brandName: String) {
-        selectedBrand = brandName
-        self.setTitle(brandName, for: .normal)
-        
+    internal func setSelectedBrand(_ brandKey: String) {
+        selectedBrand = brandKey
+        let displayName = getDisplayName(for: brandKey)
+        self.setTitle(displayName, for: .normal)
+
         updateBrandSelectionMenu()
-        
+
         sendBrandSelectionEvent()
-        brandSelectionAction?(brandName)
+        brandSelectionAction?(brandKey)
     }
     
     public func onBrandSelection(_ action: @escaping (String) -> Void) {
         self.brandSelectionAction = action
     }
-    
+
     private func sendBrandSelectionEvent() {
         guard let selectedBrand = selectedBrand else { return }
-        
+
         NotificationCenter.default.post(
             name: NSNotification.Name("CardBrandSelected"),
             object: selectedBrand
