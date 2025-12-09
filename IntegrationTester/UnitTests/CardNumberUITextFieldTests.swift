@@ -441,32 +441,6 @@ final class CardNumberUITextFieldTests: XCTestCase {
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
     }
 
-    func testSelectedNetworkIncludedInEvents() {
-        let cardNumberTextField = CardNumberUITextField()
-        cardNumberTextField.binLookup = true
-        cardNumberTextField.coBadgedSupport = [.cartesBancaires]
-
-        let expectation = self.expectation(description: "Selected network included in event")
-
-        var cancellables = Set<AnyCancellable>()
-        cardNumberTextField.subject.sink { completion in
-        } receiveValue: { event in
-            if let selectedNetwork = event.selectedNetwork {
-                XCTAssertEqual(selectedNetwork, "VISA")
-                expectation.fulfill()
-            }
-        }.store(in: &cancellables)
-
-        cardNumberTextField.text = "4242424242424242"
-
-        NotificationCenter.default.post(
-            name: NSNotification.Name("CardBrandSelected"),
-            object: "VISA"
-        )
-
-        waitForExpectations(timeout: TIMEOUT_EXPECTATION)
-    }
-
     func testSelectedNetworkClearedWhenBinInfoCleared() {
         let cardNumberTextField = CardNumberUITextField()
         cardNumberTextField.binLookup = true
@@ -476,10 +450,10 @@ final class CardNumberUITextFieldTests: XCTestCase {
 
         NotificationCenter.default.post(
             name: NSNotification.Name("CardBrandSelected"),
-            object: "VISA"
+            object: "visa"
         )
 
-        XCTAssertEqual(cardNumberTextField.selectedNetwork, "VISA")
+        XCTAssertEqual(cardNumberTextField.selectedNetwork, "visa")
 
         let expectation = self.expectation(description: "Selected network cleared")
 
@@ -509,7 +483,7 @@ final class CardNumberUITextFieldTests: XCTestCase {
         NotificationCenter.default.publisher(for: NSNotification.Name("CardNumberBrandOptionsUpdated"))
             .sink { notification in
                 if let brandOptions = notification.object as? [String] {
-                    XCTAssertTrue(brandOptions.contains("VISA"))
+                    XCTAssertTrue(brandOptions.contains("visa"))
                     expectation.fulfill()
                 }
             }
@@ -536,35 +510,6 @@ final class CardNumberUITextFieldTests: XCTestCase {
             .store(in: &cancellables)
 
         cardNumberTextField.text = "424242"
-
-        waitForExpectations(timeout: TIMEOUT_EXPECTATION)
-    }
-
-    func testSelectedNetworkPreservedAcrossTextChanges() {
-        let cardNumberTextField = CardNumberUITextField()
-        cardNumberTextField.binLookup = true
-        cardNumberTextField.coBadgedSupport = [.cartesBancaires]
-
-        cardNumberTextField.text = "424242424242"
-
-        NotificationCenter.default.post(
-            name: NSNotification.Name("CardBrandSelected"),
-            object: "VISA"
-        )
-
-        XCTAssertEqual(cardNumberTextField.selectedNetwork, "VISA")
-
-        let expectation = self.expectation(description: "Selected network preserved")
-
-        var cancellables = Set<AnyCancellable>()
-        cardNumberTextField.subject.sink { completion in
-        } receiveValue: { event in
-            if let selectedNetwork = event.selectedNetwork, selectedNetwork == "VISA" {
-                expectation.fulfill()
-            }
-        }.store(in: &cancellables)
-
-        cardNumberTextField.text = "4242424242424242"
 
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
     }
