@@ -1,3 +1,11 @@
+## [4.9.0](https://github.com/Basis-Theory/ios-elements/compare/4.8.0...4.9.0) (2025-12-09)
+
+
+### Features
+
+* filter bin info based on user input ([#89](https://github.com/Basis-Theory/ios-elements/issues/89)) ([fa4394d](https://github.com/Basis-Theory/ios-elements/commit/fa4394dc656d6717056302a827d8ac96297bd250))
+
+
 ## [4.8.0](https://github.com/Basis-Theory/ios-elements/compare/4.7.0...4.8.0) (2025-11-17)
 
 
