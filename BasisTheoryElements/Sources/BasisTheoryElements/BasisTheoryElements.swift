@@ -440,12 +440,10 @@ final public class BasisTheoryElements {
         }
     }
 
-    #if DEBUG
     internal static func _resetConfiguration() {
         _basePath = nil
         _environment = nil
         _computedBasePath = "https://api.basistheory.com"
     }
-    #endif
 }
 
