@@ -4,9 +4,9 @@ public class TokenIntentClient {
     private let apiKey: String
     private let baseURL: String
 
-    public init(apiKey: String, baseURL: String = "https://api.basistheory.com") {
+    public init(apiKey: String, baseURL: String? = nil) {
         self.apiKey = apiKey
-        self.baseURL = baseURL
+        self.baseURL = baseURL ?? BasisTheoryElements.basePath
     }
 
     // MARK: - Create Token Intent
