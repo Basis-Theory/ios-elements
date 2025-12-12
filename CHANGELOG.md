@@ -1,3 +1,11 @@
+## [4.10.0](https://github.com/Basis-Theory/ios-elements/compare/4.9.0...4.10.0) (2025-12-12)
+
+
+### Features
+
+* adding environment configuration option ([#90](https://github.com/Basis-Theory/ios-elements/issues/90)) ([8f70f71](https://github.com/Basis-Theory/ios-elements/commit/8f70f71fd5afcd4b33fc1c4794a1024921c6e51b))
+
+
 ## [4.9.0](https://github.com/Basis-Theory/ios-elements/compare/4.8.0...4.9.0) (2025-12-09)
 
 
