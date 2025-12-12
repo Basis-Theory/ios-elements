@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,7 +17,7 @@
 		0AD41CA82E32C8D4002070F8 /* TokenIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD41CA72E32C8D4002070F8 /* TokenIntentTests.swift */; };
 		428CB1062937C53000C8220E /* CardExpirationDateUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CB1052937C53000C8220E /* CardExpirationDateUITextFieldTests.swift */; };
 		428CB10A293E398B00C8220E /* CardNumberUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */; };
-		5EC844F92EEA49ED00B10269 /* EnvironmentConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC844F82EEA49ED00B10269 /* EnvironmentConfigurationTests.swift */; };
+		5EC845072EEB95F100B10269 /* EnvironmentConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC844F82EEA49ED00B10269 /* EnvironmentConfigurationTests.swift */; };
 		6286CEC129523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */; };
 		62BEB1442953A1C600E5A0CE /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 62BEB1432953A1C600E5A0CE /* BasisTheoryElements */; };
 		643ACBE12E0D965B00B8305C /* BasisTheoryElements in Frameworks */ = {isa = PBXBuildFile; productRef = 643ACBE02E0D965B00B8305C /* BasisTheoryElements */; };
@@ -57,6 +57,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5EC845022EEB945500B10269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9245767D28FF46C100A01E70 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9245768428FF46C100A01E70;
+			remoteInfo = IntegrationTester;
+		};
 		9245769C28FF46C200A01E70 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9245767D28FF46C100A01E70 /* Project object */;
@@ -83,6 +90,7 @@
 		428CB1052937C53000C8220E /* CardExpirationDateUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardExpirationDateUITextFieldTests.swift; sourceTree = "<group>"; };
 		428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberUITextFieldTests.swift; sourceTree = "<group>"; };
 		5EC844F82EEA49ED00B10269 /* EnvironmentConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentConfigurationTests.swift; sourceTree = "<group>"; };
+		5EC844FE2EEB945500B10269 /* EnvironmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EnvironmentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6286CEC029523C8200F7E8BD /* SplitCardElementsUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCardElementsUITextFieldTests.swift; sourceTree = "<group>"; };
 		646506012DC9490300660095 /* EncryptTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenTests.swift; sourceTree = "<group>"; };
 		649C178C2E0B3749008ED08F /* EncryptTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptTokenViewController.swift; sourceTree = "<group>"; };
@@ -116,7 +124,18 @@
 		92C3019529132287009F8D92 /* Env.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Env.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5EC844FF2EEB945500B10269 /* EnvironmentTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EnvironmentTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		5EC844FB2EEB945500B10269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9245768228FF46C100A01E70 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -155,6 +174,7 @@
 				9245768728FF46C100A01E70 /* IntegrationTester */,
 				9245769E28FF46C200A01E70 /* UnitTests */,
 				924576A828FF46C200A01E70 /* AcceptanceTests */,
+				5EC844FF2EEB945500B10269 /* EnvironmentTests */,
 				9245768628FF46C100A01E70 /* Products */,
 				924576B928FF475100A01E70 /* Frameworks */,
 			);
@@ -166,6 +186,7 @@
 				9245768528FF46C100A01E70 /* IntegrationTester.app */,
 				9245769B28FF46C200A01E70 /* UnitTests.xctest */,
 				924576A528FF46C200A01E70 /* AcceptanceTests.xctest */,
+				5EC844FE2EEB945500B10269 /* EnvironmentTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -235,6 +256,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5EC844FD2EEB945500B10269 /* EnvironmentTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5EC845062EEB945500B10269 /* Build configuration list for PBXNativeTarget "EnvironmentTests" */;
+			buildPhases = (
+				5EC844FA2EEB945500B10269 /* Sources */,
+				5EC844FB2EEB945500B10269 /* Frameworks */,
+				5EC844FC2EEB945500B10269 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5EC845032EEB945500B10269 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5EC844FF2EEB945500B10269 /* EnvironmentTests */,
+			);
+			name = EnvironmentTests;
+			packageProductDependencies = (
+			);
+			productName = EnvironmentTests;
+			productReference = 5EC844FE2EEB945500B10269 /* EnvironmentTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9245768428FF46C100A01E70 /* IntegrationTester */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 924576AF28FF46C200A01E70 /* Build configuration list for PBXNativeTarget "IntegrationTester" */;
@@ -306,9 +350,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1400;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 1400;
 				TargetAttributes = {
+					5EC844FD2EEB945500B10269 = {
+						CreatedOnToolsVersion = 26.1.1;
+						TestTargetID = 9245768428FF46C100A01E70;
+					};
 					9245768428FF46C100A01E70 = {
 						CreatedOnToolsVersion = 14.0.1;
 					};
@@ -341,11 +389,19 @@
 				9245768428FF46C100A01E70 /* IntegrationTester */,
 				9245769A28FF46C200A01E70 /* UnitTests */,
 				924576A428FF46C200A01E70 /* AcceptanceTests */,
+				5EC844FD2EEB945500B10269 /* EnvironmentTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5EC844FC2EEB945500B10269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9245768328FF46C100A01E70 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -377,6 +433,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5EC844FA2EEB945500B10269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EC845072EEB95F100B10269 /* EnvironmentConfigurationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9245768128FF46C100A01E70 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -401,7 +465,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EC844F92EEA49ED00B10269 /* EnvironmentConfigurationTests.swift in Sources */,
 				92278B862979CBF700168E25 /* GetTokenByIdServiceTests.swift in Sources */,
 				9262E291296E050F00A77B83 /* SessionServiceTests.swift in Sources */,
 				428CB10A293E398B00C8220E /* CardNumberUITextFieldTests.swift in Sources */,
@@ -438,6 +501,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		5EC845032EEB945500B10269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9245768428FF46C100A01E70 /* IntegrationTester */;
+			targetProxy = 5EC845022EEB945500B10269 /* PBXContainerItemProxy */;
+		};
 		9245769D28FF46C200A01E70 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9245768428FF46C100A01E70 /* IntegrationTester */;
@@ -470,6 +538,57 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		5EC845042EEB945500B10269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.test.EnvironmentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IntegrationTester.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IntegrationTester";
+			};
+			name = Debug;
+		};
+		5EC845052EEB945500B10269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.test.EnvironmentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IntegrationTester.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IntegrationTester";
+			};
+			name = Release;
+		};
 		924576AD28FF46C200A01E70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -590,7 +709,6 @@
 		924576B028FF46C200A01E70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -618,7 +736,6 @@
 		924576B128FF46C200A01E70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -646,7 +763,6 @@
 		924576B328FF46C200A01E70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -665,7 +781,6 @@
 		924576B428FF46C200A01E70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -684,7 +799,6 @@
 		924576B628FF46C200A01E70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -711,7 +825,6 @@
 		924576B728FF46C200A01E70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -734,6 +847,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5EC845062EEB945500B10269 /* Build configuration list for PBXNativeTarget "EnvironmentTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5EC845042EEB945500B10269 /* Debug */,
+				5EC845052EEB945500B10269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9245768028FF46C100A01E70 /* Build configuration list for PBXProject "IntegrationTester" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
