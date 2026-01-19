@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import BasisTheory
 
 struct ProxyHelpers {
     static func getUrlRequest(proxyHttpRequest: ProxyHttpRequest?) throws -> URLRequest {
@@ -87,7 +86,9 @@ struct ProxyHelpers {
                         
                         var json = JSON.dictionaryValue([:])
                         if(shouldExposeRawProxyResponse) {
-                            BasisTheoryElements.traverseJsonDictionary(dictionary: serializedJson as! [String:Any], json: &json, transformValue: JSON.rawValue)
+                            BasisTheoryElements.traverseJsonDictionary(dictionary: serializedJson as! [String:Any], json: &json, transformValue: { value in
+                                return JSON.rawValue(value)
+                            })
                         } else {
                             BasisTheoryElements.traverseJsonDictionary(dictionary: serializedJson as! [String:Any], json: &json, transformValue: JSON.createElementValueReference)
                         }

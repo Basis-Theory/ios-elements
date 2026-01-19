@@ -7,13 +7,12 @@
 
 import XCTest
 import BasisTheoryElements
-import BasisTheory
 
 final class ProxyServiceTests: XCTestCase {
     private final var TIMEOUT_EXPECTATION = 5.0
     
     override func setUpWithError() throws {
-        BasisTheoryAPI.basePath = "https://api.flock-dev.com"
+        BasisTheoryElements.basePath = "https://api.flock-dev.com"
     }
     
     override func tearDownWithError() throws { }
@@ -75,8 +74,8 @@ final class ProxyServiceTests: XCTestCase {
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
         
         let idQueryExpectation = self.expectation(description: "Token ID Query")
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateBtApiKey).execute { result in
-            let token = try! result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateBtApiKey) { data, error in
+            let token = data!.data!.value as! [String: Any]
             
             XCTAssertEqual(token["proxyProperty"] as! String, "testValue")
             XCTAssertEqual(token["nestedProxyProperty"] as! String, "nestedTestValue")
@@ -174,8 +173,8 @@ final class ProxyServiceTests: XCTestCase {
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
         
         let idQueryExpectation = self.expectation(description: "Token ID Query")
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateBtApiKey).execute { result in
-            let token = try! result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateBtApiKey) { data, error in
+            let token = data!.data!.value as! [String: Any]
             
             XCTAssertEqual(token["proxyProperty1"] as! String, "1")
             XCTAssertEqual(token["proxyProperty2"] as! String, "2")
@@ -341,8 +340,8 @@ final class ProxyServiceTests: XCTestCase {
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
         
         let idQueryExpectation = self.expectation(description: "Token ID Query")
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateBtApiKey).execute { result in
-            let token = try! result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateBtApiKey) { data, error in
+            let token = data!.data!.value as! [String: Any]
             
             XCTAssertEqual(token["customHeader"] as! String, "headerValue")
             
@@ -444,14 +443,14 @@ final class ProxyServiceTests: XCTestCase {
         waitForExpectations(timeout: 3)
         
         let idQueryExpectation = self.expectation(description: "Token ID Query")
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken["id"] as! String).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken["id"] as! String, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
                 
                 XCTAssertEqual(token["textFieldRef"] as! String, "http://echo.basistheory.com/get")
                 
                 idQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }

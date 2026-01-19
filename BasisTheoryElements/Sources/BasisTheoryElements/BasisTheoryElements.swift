@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import BasisTheory
 import AnyCodable
 import Combine
 
@@ -20,27 +19,11 @@ public enum ProxyError: Error {
     case invalidInput
 }
 
-public enum HttpClientError: Error {
+public enum HttpClientError: Error, Equatable {
     case invalidURL
     case invalidRequest
-}
-
-extension RequestBuilder {
-    func addBasisTheoryElementHeaders(apiKey: String, btTraceId: String) -> Self {
-        var headers: [String: String] = [
-            "User-Agent": "BasisTheory iOS Elements",
-            "BT-API-KEY": apiKey,
-            "BT-TRACE-ID": btTraceId
-        ]
-
-        if let deviceInfo = getEncodedDeviceInfo() {
-            headers["BT-DEVICE-INFO"] = deviceInfo
-        }
-
-        addHeaders(headers)
-
-        return self
-    }
+    case invalidResponse
+    case httpError(statusCode: Int, body: String?)
 }
 
 public enum Environment {
@@ -93,24 +76,18 @@ final public class BasisTheoryElements {
         apiKey != nil ? apiKey! : BasisTheoryElements.apiKey
     }
 
-    private static func completeApiRequest<T>(endpoint: String, btTraceId: String, result: Result<Response<T>, ErrorResponse>, completion: @escaping ((_ data: T?, _ error: Error?) -> Void)) {
-        do {
-            let app = try result.get()
-
-            completion(app.body, nil)
-            TelemetryLogging.info("Successful API response", attributes: [
-                "endpoint": endpoint,
-                "BT-TRACE-ID": btTraceId,
-                "apiSuccess": true
-            ])
-        } catch {
-            completion(nil, error)
-            TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
-                "endpoint": endpoint,
-                "BT-TRACE-ID": btTraceId,
-                "apiSuccess": false
-            ])
+    private static func getBasisTheoryHeaders(apiKey: String, btTraceId: String) -> [String: String] {
+        var headers: [String: String] = [
+            "User-Agent": "BasisTheory iOS Elements",
+            "BT-API-KEY": apiKey,
+            "BT-TRACE-ID": btTraceId
+        ]
+        
+        if let deviceInfo = getEncodedDeviceInfo() {
+            headers["BT-DEVICE-INFO"] = deviceInfo
         }
+        
+        return headers
     }
 
     private static func logBeginningOfApiCall(endpoint: String, btTraceId: String, extraAttributes: [String: Encodable] = [:]) {
@@ -123,10 +100,31 @@ final public class BasisTheoryElements {
     private static func getApplicationKey(apiKey: String, btTraceId: String, completion: @escaping ((_ data: Application?, _ error: Error?) -> Void)) {
         let endpoint = "GET /applications/key"
         logBeginningOfApiCall(endpoint: endpoint, btTraceId: btTraceId)
-
-        BasisTheoryAPI.basePath = basePath
-        ApplicationsAPI.getByKeyWithRequestBuilder().addBasisTheoryElementHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId).execute { result in
-            completeApiRequest(endpoint: endpoint, btTraceId: btTraceId, result: result, completion: completion)
+        
+        let headers = getBasisTheoryHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId)
+        let url = "\(basePath)/applications/key"
+        
+        HttpClientHelpers.executeTypedRequest(
+            method: .get,
+            url: url,
+            headers: headers,
+            body: nil as String?
+        ) { (result: Application?, error: Error?) in
+            if let error = error {
+                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": false
+                ])
+                completion(nil, error)
+            } else {
+                TelemetryLogging.info("Successful API response", attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": true
+                ])
+                completion(result, nil)
+            }
         }
     }
 
@@ -139,13 +137,34 @@ final public class BasisTheoryElements {
         do {
             try replaceElementRefs(body: &mutableBody, endpoint: endpoint, btTraceId: btTraceId)
         } catch {
-            completion(nil, TokenizingError.invalidInput) // error logged with more detail in replaceElementRefs
+            completion(nil, TokenizingError.invalidInput)
             return
         }
-
-        BasisTheoryAPI.basePath = basePath
-        TokenizeAPI.tokenizeWithRequestBuilder(body: AnyCodable(mutableBody)).addBasisTheoryElementHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId).execute { result in
-            completeApiRequest(endpoint: endpoint, btTraceId: btTraceId, result: result, completion: completion)
+        
+        let headers = getBasisTheoryHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId)
+        let url = "\(basePath)/tokenize"
+        
+        HttpClientHelpers.executeTypedRequest(
+            method: .post,
+            url: url,
+            headers: headers,
+            body: AnyCodable(mutableBody)
+        ) { (result: AnyCodable?, error: Error?) in
+            if let error = error {
+                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": false
+                ])
+                completion(nil, error)
+            } else {
+                TelemetryLogging.info("Successful API response", attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": true
+                ])
+                completion(result, nil)
+            }
         }
     }
 
@@ -229,18 +248,37 @@ final public class BasisTheoryElements {
         do {
             try replaceElementRefs(body: &mutableData, endpoint: endpoint, btTraceId: btTraceId)
         } catch {
-            completion(nil, TokenizingError.invalidInput) // error logged with more detail in replaceElementRefs
+            completion(nil, TokenizingError.invalidInput)
             return
         }
 
         mutableBody.data = mutableData
-
-
-        BasisTheoryAPI.basePath = basePath
         let createTokenRequest = mutableBody.toCreateTokenRequest()
-
-        TokensAPI.createWithRequestBuilder(createTokenRequest: createTokenRequest).addBasisTheoryElementHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId).execute { result in
-            completeApiRequest(endpoint: endpoint, btTraceId: btTraceId, result: result, completion: completion)
+        
+        let headers = getBasisTheoryHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId)
+        let url = "\(basePath)/tokens"
+        
+        HttpClientHelpers.executeTypedRequest(
+            method: .post,
+            url: url,
+            headers: headers,
+            body: createTokenRequest
+        ) { (result: CreateTokenResponse?, error: Error?) in
+            if let error = error {
+                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": false
+                ])
+                completion(nil, error)
+            } else {
+                TelemetryLogging.info("Successful API response", attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": true
+                ])
+                completion(result, nil)
+            }
         }
     }
 
@@ -263,7 +301,6 @@ final public class BasisTheoryElements {
     }
 
 
-
     public static func proxy(apiKey: String? = nil, proxyKey: String? = nil, proxyUrl: String? = nil, proxyHttpRequest: ProxyHttpRequest? = nil, completion: @escaping ((_ request: URLResponse?, _ data: JSON?, _ error: Error?) -> Void)) -> Void {
         let endpoint = "\(proxyHttpRequest?.method?.rawValue ?? HttpMethod.get.rawValue) \(proxyHttpRequest?.url ?? "\(BasisTheoryElements.basePath)/proxy")"
         let btTraceId = UUID().uuidString
@@ -271,8 +308,6 @@ final public class BasisTheoryElements {
             "proxyHttpRequestPath": proxyHttpRequest?.path ?? "nil",
             "proxyHttpRequestQuery": proxyHttpRequest?.query ?? "nil"
         ])
-
-        BasisTheoryAPI.basePath = basePath
 
         var request = try! ProxyHelpers.getUrlRequest(proxyHttpRequest: proxyHttpRequest)
 
@@ -303,9 +338,66 @@ final public class BasisTheoryElements {
         let endpoint = "POST /sessions"
         let btTraceId = UUID().uuidString
         logBeginningOfApiCall(endpoint: endpoint, btTraceId: btTraceId)
+        
+        let headers = getBasisTheoryHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId)
+        let url = "\(basePath)/sessions"
+        
+        HttpClientHelpers.executeTypedRequest(
+            method: .post,
+            url: url,
+            headers: headers,
+            body: nil as String?
+        ) { (result: CreateSessionResponse?, error: Error?) in
+            if let error = error {
+                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": false
+                ])
+                completion(nil, error)
+            } else {
+                TelemetryLogging.info("Successful API response", attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": true
+                ])
+                completion(result, nil)
+            }
+        }
+    }
 
-        SessionsAPI.createWithRequestBuilder().addBasisTheoryElementHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId).execute { result in
-            completeApiRequest(endpoint: endpoint, btTraceId: btTraceId, result: result, completion: completion)
+    public static func authorizeSession(nonce: String, permissions: [String]? = nil, rules: [AccessRule]? = nil, apiKey: String? = nil, completion: @escaping ((_ data: AuthorizeSessionResponse?, _ error: Error?) -> Void)) -> Void {
+        let endpoint = "POST /sessions/authorize"
+        let btTraceId = UUID().uuidString
+        logBeginningOfApiCall(endpoint: endpoint, btTraceId: btTraceId)
+        
+        let headers = getBasisTheoryHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId)
+        let url = "\(basePath)/sessions/authorize"
+        let request = AuthorizeSessionRequest(nonce: nonce, permissions: permissions, rules: rules)
+        
+        HttpClientHelpers.executeTypedRequest(
+            method: .post,
+            url: url,
+            headers: headers,
+            body: request
+        ) { (result: AuthorizeSessionResponse?, error: Error?) in
+            if let error = error {
+                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": false
+                ])
+                completion(nil, error)
+            } else {
+                // authorizeSession returns empty response body on success
+                TelemetryLogging.info("Successful API response", attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": true
+                ])
+                // Return empty response object since API returns 204 No Content
+                completion(AuthorizeSessionResponse(), nil)
+            }
         }
     }
 
@@ -313,13 +405,37 @@ final public class BasisTheoryElements {
         let endpoint = "GET /tokens/id"
         let btTraceId = UUID().uuidString
         logBeginningOfApiCall(endpoint: endpoint, btTraceId: btTraceId)
+        
+        let headers = getBasisTheoryHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId)
+        let url = "\(basePath)/tokens/\(id)"
 
-        TokensAPI.getByIdWithRequestBuilder(id: id).addBasisTheoryElementHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId).execute { result in
-            do {
-                let token = try result.get().body
-
+        HttpClientHelpers.executeTypedRequest(
+            method: .get,
+            url: url,
+            headers: headers,
+            body: nil as String?
+        ) { (token: Token?, error: Error?) in
+            if let error = error {
+                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": false
+                ])
+                completion(nil, error)
+            } else if let token = token {
                 var json = JSON.dictionaryValue([:])
-                BasisTheoryElements.traverseJsonDictionary(dictionary: token.data!.value as! [String:Any], json: &json)
+                
+                if let tokenData = token.data?.value as? [String: Any] {
+                    BasisTheoryElements.traverseJsonDictionary(dictionary: tokenData, json: &json, transformValue: { value in
+                        if value is String {
+                            return JSON.elementValueReference(ElementValueReference(valueMethod: {
+                                String(describing: value)
+                            }, isComplete: true))
+                        } else {
+                            return JSON.rawValue(value)
+                        }
+                    })
+                }
 
                 completion(token.toGetTokenByIdResponse(data: json), nil)
                 TelemetryLogging.info("Successful API response", attributes: [
@@ -327,13 +443,8 @@ final public class BasisTheoryElements {
                     "BT-TRACE-ID": btTraceId,
                     "apiSuccess": true
                 ])
-            } catch {
-                completion(nil, error)
-                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
-                    "endpoint": endpoint,
-                    "BT-TRACE-ID": btTraceId,
-                    "apiSuccess": false
-                ])
+            } else {
+                completion(nil, HttpClientError.invalidResponse)
             }
         }
     }

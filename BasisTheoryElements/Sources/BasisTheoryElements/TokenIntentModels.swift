@@ -172,11 +172,6 @@ public struct AuthenticationDetails: Codable {
     // Add authentication-specific fields as needed based on your requirements
     public let cryptogram: String?
     public let eci: String?
-
-    private enum CodingKeys: String, CodingKey {
-        case cryptogram
-        case eci
-    }
 }
 
 public struct ExtrasObject: Codable {
