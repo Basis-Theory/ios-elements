@@ -423,19 +423,26 @@ final public class BasisTheoryElements {
                 ])
                 completion(nil, error)
             } else if let token = token {
-                var json = JSON.dictionaryValue([:])
-                
-                if let tokenData = token.data?.value as? [String: Any] {
-                    BasisTheoryElements.traverseJsonDictionary(dictionary: tokenData, json: &json, transformValue: { value in
-                        if value is String {
-                            return JSON.elementValueReference(ElementValueReference(valueMethod: {
-                                String(describing: value)
-                            }, isComplete: true))
-                        } else {
-                            return JSON.rawValue(value)
-                        }
-                    })
+                guard let tokenData = token.data?.value as? [String: Any] else {
+                    TelemetryLogging.error("Invalid token data format", error: HttpClientError.invalidResponse, attributes: [
+                        "endpoint": endpoint,
+                        "BT-TRACE-ID": btTraceId,
+                        "tokenId": id
+                    ])
+                    completion(nil, HttpClientError.invalidResponse)
+                    return
                 }
+
+                var json = JSON.dictionaryValue([:])
+                BasisTheoryElements.traverseJsonDictionary(dictionary: tokenData, json: &json, transformValue: { value in
+                    if value is String {
+                        return JSON.elementValueReference(ElementValueReference(valueMethod: {
+                            String(describing: value)
+                        }, isComplete: true))
+                    } else {
+                        return JSON.rawValue(value)
+                    }
+                })
 
                 completion(token.toGetTokenByIdResponse(data: json), nil)
                 TelemetryLogging.info("Successful API response", attributes: [
