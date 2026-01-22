@@ -7,7 +7,6 @@
 
 import XCTest
 import BasisTheoryElements
-import BasisTheory
 import Combine
 
 final class CardExpirationDateUITextFieldTests: XCTestCase {
@@ -216,14 +215,14 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
         
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
         let idQueryExpectation = self.expectation(description: "Token ID Query")
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken["id"] as! String).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken["id"] as! String, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
                 XCTAssertEqual(token["monthRef"] as? Int, Int(self.formatMonth(month: self.getCurrentMonth())))
                 XCTAssertEqual(token["yearRef"] as? Int, Int(formattedYear))
                 
                 idQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }
@@ -268,9 +267,9 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
         let idQueryExpectation = self.expectation(description: "Token ID Query")
         
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken["id"] as! String).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken["id"] as! String, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
                 XCTAssertEqual(token["fullYear"] as! String, expectedYear)
                 XCTAssertEqual(token["singleDigitMonth"] as! String, "\(expectedMonth.suffix(1))")
                 XCTAssertEqual(token["dubleDigitMonth"] as! String, expectedMonth)
@@ -279,9 +278,8 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
                 XCTAssertEqual(token["monthForwardSlashTwoDigitYear"] as! String, "\(expectedMonth)/\(expectedYear.suffix(2))")
                 XCTAssertEqual(token["fullYearDashMonth"] as! String, "\(expectedYear)-\(expectedMonth)")
                 
-                
                 idQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }

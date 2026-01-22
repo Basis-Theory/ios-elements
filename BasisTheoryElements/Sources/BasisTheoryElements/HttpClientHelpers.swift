@@ -72,6 +72,92 @@ private func encodeParamsToFormUrlEncoded(_ formParams: [String: Any]) -> String
 
 
 struct HttpClientHelpers {
+    private static let jsonEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        return encoder
+    }()
+
+    private static let jsonDecoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+
+    static func executeTypedRequest<T: Decodable>(
+        method: HttpMethod,
+        url: String,
+        headers: [String: String] = [:],
+        body: Encodable? = nil,
+        completion: @escaping (T?, Error?) -> Void
+    ) {
+        guard let requestUrl = URL(string: url) else {
+            completion(nil, HttpClientError.invalidURL)
+            return
+        }
+        
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = method.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        if let encodedDeviceInfo = getEncodedDeviceInfo() {
+            request.setValue(encodedDeviceInfo, forHTTPHeaderField: "BT-DEVICE-INFO")
+        }
+
+        if let body = body {
+            do {
+                request.httpBody = try jsonEncoder.encode(body)
+            } catch {
+                completion(nil, error)
+                return
+            }
+        }
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(nil, HttpClientError.invalidRequest)
+                return
+            }
+            
+            guard (200...299).contains(httpResponse.statusCode) else {
+                let responseBody = data.flatMap { String(data: $0, encoding: .utf8) }
+                TelemetryLogging.error("HTTP request failed", error: HttpClientError.httpError(statusCode: httpResponse.statusCode, body: responseBody), attributes: [
+                    "statusCode": httpResponse.statusCode,
+                    "url": url,
+                    "method": method.rawValue
+                ])
+                completion(nil, HttpClientError.httpError(statusCode: httpResponse.statusCode, body: responseBody))
+                return
+            }
+            
+            guard let data = data else {
+                completion(nil, HttpClientError.invalidRequest)
+                return
+            }
+            
+            if data.isEmpty {
+                completion(nil, nil)
+                return
+            }
+            
+            do {
+                let result = try jsonDecoder.decode(T.self, from: data)
+                completion(result, nil)
+            } catch {
+                completion(nil, error)
+            }
+        }.resume()
+    }
+    
     static func executeRequest(method: HttpMethod, url: String, payload: [String: Any]?, config: Config?, completion: @escaping ((_ request: URLResponse?, _ data: JSON?, _ error: Error?) -> Void)) -> Void {
         guard var components = URLComponents(string: url), components.scheme != nil else {
             completion(nil, nil, HttpClientError.invalidURL)

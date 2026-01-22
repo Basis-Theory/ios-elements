@@ -1,7 +1,6 @@
 import Foundation
 
 import XCTest
-import BasisTheory
 import BasisTheoryElements
 import Combine
 

@@ -7,7 +7,6 @@
 
 import XCTest
 import BasisTheoryElements
-import BasisTheory
 import Combine
 
 final class TextElementUITextFieldTests: XCTestCase {
@@ -192,9 +191,9 @@ final class TextElementUITextFieldTests: XCTestCase {
         
         let transformQueryExpectation = self.expectation(description: "Query Token By ID to Test Transformed Textfield")
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
 
                 XCTAssertEqual(token["textFieldRef"] as! String, transformedPhoneNumber)
                 XCTAssertEqual(token["myProp"] as! String, "myValue")
@@ -202,7 +201,7 @@ final class TextElementUITextFieldTests: XCTestCase {
                 XCTAssertEqual((token["object"] as! [String: String])["textFieldRef"], transformedPhoneNumber)
 
                 transformQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }
@@ -320,9 +319,9 @@ final class TextElementUITextFieldTests: XCTestCase {
         
         let valueTypeQueryExpectation = self.expectation(description: "Query Token By ID to Test Value Types")
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
 
                 XCTAssertEqual(token["stringTextField"] as! String, string)
                 XCTAssertEqual(token["intTextField"] as! Int, int)
@@ -331,7 +330,7 @@ final class TextElementUITextFieldTests: XCTestCase {
                 
 
                 valueTypeQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }

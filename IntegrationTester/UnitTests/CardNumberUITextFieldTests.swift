@@ -7,7 +7,6 @@
 
 import XCTest
 @testable import BasisTheoryElements
-import BasisTheory
 import Combine
 
 final class CardNumberUITextFieldTests: XCTestCase {

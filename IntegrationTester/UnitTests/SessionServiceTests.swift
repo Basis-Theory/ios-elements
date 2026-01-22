@@ -7,13 +7,12 @@
 
 import XCTest
 import BasisTheoryElements
-import BasisTheory
 
 final class SessionServiceTests: XCTestCase {
     private final var TIMEOUT_EXPECTATION = 3.0
     
     override func setUpWithError() throws {
-        BasisTheoryAPI.basePath = "https://api.flock-dev.com"
+        BasisTheoryElements.basePath = "https://api.flock-dev.com"
     }
     
     override func tearDownWithError() throws { }
