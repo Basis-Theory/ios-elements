@@ -300,6 +300,40 @@ final public class BasisTheoryElements {
         }
     }
 
+    public static func deleteTokenIntent(
+        id: String, apiKey: String? = nil,
+        completion: @escaping ((_ error: Error?) -> Void)
+    ) {
+        TelemetryLogging.info("Deleting token intent")
+
+        let client = TokenIntentClient(apiKey: getApiKey(apiKey), baseURL: basePath)
+
+        client.deleteTokenIntent(id: id) { result in
+            switch result {
+            case .success:
+                completion(nil)
+            case .failure(let error):
+                completion(error)
+            }
+        }
+    }
+
+    @available(iOS 13.0, *)
+    public static func createTokenIntent(
+        request: CreateTokenIntentRequest, apiKey: String? = nil
+    ) async throws -> TokenIntent {
+        let client = TokenIntentClient(apiKey: getApiKey(apiKey), baseURL: basePath)
+        return try await client.createTokenIntent(request: request)
+    }
+
+    @available(iOS 13.0, *)
+    public static func deleteTokenIntent(
+        id: String, apiKey: String? = nil
+    ) async throws {
+        let client = TokenIntentClient(apiKey: getApiKey(apiKey), baseURL: basePath)
+        try await client.deleteTokenIntent(id: id)
+    }
+
 
     public static func proxy(apiKey: String? = nil, proxyKey: String? = nil, proxyUrl: String? = nil, proxyHttpRequest: ProxyHttpRequest? = nil, completion: @escaping ((_ request: URLResponse?, _ data: JSON?, _ error: Error?) -> Void)) -> Void {
         let endpoint = "\(proxyHttpRequest?.method?.rawValue ?? HttpMethod.get.rawValue) \(proxyHttpRequest?.url ?? "\(BasisTheoryElements.basePath)/proxy")"
