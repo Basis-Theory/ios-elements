@@ -71,6 +71,58 @@ public class TokenIntentClient {
             }
         }.resume()
     }
+
+    // MARK: - Delete Token Intent
+
+    public func deleteTokenIntent(
+        id: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard !id.isEmpty else {
+            completion(.failure(
+                NSError(
+                    domain: "TokenIntentClient", code: -1,
+                    userInfo: [NSLocalizedDescriptionKey: "Token Intent ID cannot be empty"])))
+            return
+        }
+
+        let endpoint = "DELETE /token-intents/id"
+        let btTraceId = UUID().uuidString
+
+        let url = URL(string: "\(baseURL)/token-intents/\(id)")!
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "DELETE"
+        urlRequest.setValue(apiKey, forHTTPHeaderField: "BT-API-KEY")
+
+        if let encodedDeviceInfo = getEncodedDeviceInfo() {
+            urlRequest.setValue(encodedDeviceInfo, forHTTPHeaderField: "BT-DEVICE-INFO")
+        }
+
+        URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(
+                    NSError(
+                        domain: "TokenIntentClient", code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
+                return
+            }
+
+            if httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 {
+                completion(.success(()))
+            } else {
+                let errorMessage = data != nil ? String(data: data!, encoding: .utf8) ?? "Unknown error" : "Unknown error"
+                completion(.failure(
+                    NSError(
+                        domain: "TokenIntentClient", code: httpResponse.statusCode,
+                        userInfo: [NSLocalizedDescriptionKey: errorMessage])))
+            }
+        }.resume()
+    }
 }
 
 // MARK: - Async/await support
@@ -80,6 +132,14 @@ extension TokenIntentClient {
     public func createTokenIntent(request: CreateTokenIntentRequest) async throws -> TokenIntent {
         return try await withCheckedThrowingContinuation { continuation in
             createTokenIntent(request: request) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    public func deleteTokenIntent(id: String) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            deleteTokenIntent(id: id) { result in
                 continuation.resume(with: result)
             }
         }
