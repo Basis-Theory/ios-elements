@@ -274,6 +274,83 @@ final class TextElementUITextFieldTests: XCTestCase {
         XCTAssertEqual(iconImageView?.tintColor, UIColor.red)
     }
     
+    func testCopyEventEmitted() throws {
+        let textField = TextElementUITextField()
+        try! textField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event emitted")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.insertText("test value")
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, true)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        textField.perform(#selector(textField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventContainsCorrectMetadata() throws {
+        let textField = TextElementUITextField()
+        let regexDigit = try! NSRegularExpression(pattern: "\\d")
+        let mask = [regexDigit, regexDigit, regexDigit]
+        try! textField.setConfig(options: TextElementOptions(mask: mask, enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with mask metadata")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.insertText("12")
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, false) // mask not satisfied
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                XCTAssertEqual(message.maskSatisfied, false)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        textField.perform(#selector(textField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventWithEmptyField() throws {
+        let textField = TextElementUITextField()
+        try! textField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with empty field")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.empty, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        textField.perform(#selector(textField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
     func testGetValueType() throws {
         let textField = TextElementUITextField()
         let intTextField = TextElementUITextField()

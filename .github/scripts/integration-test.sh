@@ -23,9 +23,22 @@ cat <<EOT > ./IntegrationTester/Env.plist
 </plist>
 EOT
 
+# Find iPhone 16 Pro device ID from the latest iOS version
+DEVICE_ID=$(xcrun simctl list devices available | grep "iPhone 16 Pro" | tail -1 | grep -oE '[A-F0-9-]{36}')
+
+if [ -z "$DEVICE_ID" ]; then
+    echo "Error: No iPhone 16 Pro simulator found"
+    xcrun simctl list devices available
+    exit 1
+fi
+
+echo "Using device ID: $DEVICE_ID"
+
+xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+
 xcodebuild clean test \
     -project ./IntegrationTester/IntegrationTester.xcodeproj \
     -scheme IntegrationTester \
     -configuration Debug \
-    -destination platform="iOS Simulator,OS=18.6,name=iPhone 16 Pro" \
+    -destination "platform=iOS Simulator,id=$DEVICE_ID" \
     | xcpretty

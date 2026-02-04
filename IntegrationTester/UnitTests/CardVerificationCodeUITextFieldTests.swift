@@ -180,4 +180,57 @@ final class CardVerificationCodeUITextFieldTests: XCTestCase {
         // assert color
         XCTAssertEqual(iconImageView?.tintColor, UIColor.red)
     }
+    
+    func testCopyEventEmitted() throws {
+        let cvcField = CardVerificationCodeUITextField()
+        cvcField.setConfig(options: CardVerificationCodeOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event emitted")
+        var cancellables = Set<AnyCancellable>()
+        
+        cvcField.insertText("123")
+        
+        cvcField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, true)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        cvcField.perform(#selector(cvcField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventWithIncompleteCVC() throws {
+        let cvcField = CardVerificationCodeUITextField()
+        cvcField.setConfig(options: CardVerificationCodeOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with incomplete CVC")
+        var cancellables = Set<AnyCancellable>()
+        
+        cvcField.insertText("12")
+        
+        cvcField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, false)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, false)
+                XCTAssertEqual(message.maskSatisfied, false)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        cvcField.perform(#selector(cvcField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
 }
