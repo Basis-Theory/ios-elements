@@ -355,4 +355,58 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
         // assert color
         XCTAssertEqual(iconImageView?.tintColor, UIColor.red)
     }
+    
+    func testCopyEventEmitted() throws {
+        let expirationDateTextField = CardExpirationDateUITextField()
+        try! expirationDateTextField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event emitted")
+        var cancellables = Set<AnyCancellable>()
+        
+        let futureYear = getCurrentYear() + 1
+        expirationDateTextField.insertText(formatMonth(month: getCurrentMonth()) + "/" + String(futureYear))
+        
+        expirationDateTextField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, true)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        expirationDateTextField.perform(#selector(expirationDateTextField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventWithIncompleteDate() throws {
+        let expirationDateTextField = CardExpirationDateUITextField()
+        try! expirationDateTextField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with incomplete date")
+        var cancellables = Set<AnyCancellable>()
+        
+        expirationDateTextField.insertText("12")
+        
+        expirationDateTextField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, false)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, false)
+                XCTAssertEqual(message.maskSatisfied, false)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        expirationDateTextField.perform(#selector(expirationDateTextField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
 }

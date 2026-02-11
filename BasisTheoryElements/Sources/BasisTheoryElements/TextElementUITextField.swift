@@ -354,7 +354,7 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
         subject.send(event);
     }
     
-    @objc func copyText() {
+    @objc public func copyText() {
         UIPasteboard.general.string = super.text
         
         let checkImage = UIImage(named: "check", in: getResourceBundle(), compatibleWith: nil)
@@ -369,6 +369,23 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.copyIconImageView.image = copyImage
         }
+        
+        let copyEvent = ElementEvent(
+            type: "copy",
+            complete: self.metadata.complete,
+            empty: self.metadata.empty,
+            valid: self.metadata.valid,
+            maskSatisfied: self.metadata.maskSatisfied,
+            details: [],
+            binInfo: nil
+        )
+        
+        TelemetryLogging.info("TextElementUITextField copy event", attributes: [
+            "elementId": self.elementId,
+            "event": try? copyEvent.encode()
+        ])
+        
+        subject.send(copyEvent)
     }
     
     public override func becomeFirstResponder() -> Bool {

@@ -16,7 +16,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '26.0.1'
+          xcode-version: latest-stable
 
       - name: Testing with IntegrationTester app
         run: exec .github/scripts/integration-test.sh

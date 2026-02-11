@@ -65,6 +65,12 @@ final class IntegrationTesterUITests: XCTestCase {
         nameTextField.tap()
         nameTextField.typeText("abcdefg")
         
+        let expectation = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "abcdefg"),
+            object: readOnlyTextField
+        )
+        wait(for: [expectation], timeout: 5)
+        
         XCTAssertEqual(readOnlyTextField.value as! String, "abcdefg")
     }
     
