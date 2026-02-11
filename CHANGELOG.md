@@ -1,3 +1,11 @@
+## [5.1.0](https://github.com/Basis-Theory/ios-elements/compare/5.0.0...5.1.0) (2026-02-11)
+
+
+### Features
+
+* add copy event support ([#95](https://github.com/Basis-Theory/ios-elements/issues/95)) ([43ba07c](https://github.com/Basis-Theory/ios-elements/commit/43ba07c27dda77f848802640554ce813d2a1395b))
+
+
 ## [5.0.0](https://github.com/Basis-Theory/ios-elements/compare/4.10.0...5.0.0) (2026-01-22)
 
 
