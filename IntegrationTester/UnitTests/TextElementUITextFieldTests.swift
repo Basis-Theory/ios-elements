@@ -414,4 +414,89 @@ final class TextElementUITextFieldTests: XCTestCase {
 
         waitForExpectations(timeout: 3)
     }
+    
+    func testTextSetterTriggersChangeEventWithValidation() throws {
+        let textField = TextElementUITextField()
+        let customRegex = try! NSRegularExpression(pattern: "^\\d{16}$")
+        try! textField.setConfig(options: TextElementOptions(validation: customRegex))
+        
+        let changeExpectation = self.expectation(description: "text setter triggers change event")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            XCTAssertEqual(message.type, "textChange")
+            XCTAssertEqual(message.complete, true)
+            XCTAssertEqual(message.valid, true)
+            XCTAssertEqual(message.empty, false)
+            
+            // assert metadata updated
+            XCTAssertEqual(textField.metadata.complete, message.complete)
+            XCTAssertEqual(textField.metadata.valid, message.valid)
+            XCTAssertEqual(textField.metadata.empty, message.empty)
+            
+            changeExpectation.fulfill()
+        }.store(in: &cancellables)
+        
+        textField.text = "4242424242424242"
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testTextSetterTriggersChangeEventWithInvalidValue() throws {
+        let textField = TextElementUITextField()
+        let customRegex = try! NSRegularExpression(pattern: "^\\d{16}$")
+        try! textField.setConfig(options: TextElementOptions(validation: customRegex))
+        
+        let changeExpectation = self.expectation(description: "text setter triggers change event with invalid value")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            XCTAssertEqual(message.type, "textChange")
+            XCTAssertEqual(message.complete, false)
+            XCTAssertEqual(message.valid, false)
+            XCTAssertEqual(message.empty, false)
+            
+            // assert metadata updated
+            XCTAssertEqual(textField.metadata.complete, message.complete)
+            XCTAssertEqual(textField.metadata.valid, message.valid)
+            XCTAssertEqual(textField.metadata.empty, message.empty)
+            
+            changeExpectation.fulfill()
+        }.store(in: &cancellables)
+        
+        textField.text = "4242"
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testTextSetterTriggersChangeEventWithEmptyValue() throws {
+        let textField = TextElementUITextField()
+        
+        let changeExpectation = self.expectation(description: "text setter triggers change event with empty value")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            XCTAssertEqual(message.type, "textChange")
+            XCTAssertEqual(message.complete, true)
+            XCTAssertEqual(message.valid, true)
+            XCTAssertEqual(message.empty, true)
+            
+            // assert metadata updated
+            XCTAssertEqual(textField.metadata.complete, message.complete)
+            XCTAssertEqual(textField.metadata.valid, message.valid)
+            XCTAssertEqual(textField.metadata.empty, message.empty)
+            
+            changeExpectation.fulfill()
+        }.store(in: &cancellables)
+        
+        textField.text = ""
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
 }
