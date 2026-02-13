@@ -45,6 +45,5 @@ xcodebuild clean test \
     -project ./IntegrationTester/IntegrationTester.xcodeproj \
     -scheme IntegrationTester \
     -configuration Debug \
-    -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-    ONLY_ACTIVE_ARCH=NO \
+    -destination "platform=iOS Simulator,id=$DEVICE_ID,arch=arm64" \
     | xcpretty
