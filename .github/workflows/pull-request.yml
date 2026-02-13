@@ -9,7 +9,7 @@ jobs:
   test:
     environment: PR
     name: Testing BasisTheoryElements Package
-    runs-on: macOS-latest
+    runs-on: macos-latest-xlarge
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
