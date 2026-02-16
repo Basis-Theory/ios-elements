@@ -40,5 +40,4 @@ xcodebuild clean test \
     -project ./IntegrationTester/IntegrationTester.xcodeproj \
     -scheme IntegrationTester \
     -configuration Debug \
-    -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-    | xcpretty
+    -destination "platform=iOS Simulator,id=$DEVICE_ID"
