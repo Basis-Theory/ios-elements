@@ -468,7 +468,7 @@ final public class BasisTheoryElements {
                 ])
                 completion(nil, error)
             } else if let token = token {
-                guard let tokenData = token.data?.value as? [String: Any] else {
+                guard let tokenData = token.data?.deepUnwrap() as? [String: Any] else {
                     TelemetryLogging.error("Invalid token data format", error: HttpClientError.invalidResponse, attributes: [
                         "endpoint": endpoint,
                         "BT-TRACE-ID": btTraceId,
