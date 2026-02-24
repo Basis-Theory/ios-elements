@@ -1,3 +1,11 @@
+## [5.2.0](https://github.com/Basis-Theory/ios-elements/compare/5.1.0...5.2.0) (2026-02-24)
+
+
+### Features
+
+* implement token update ([#96](https://github.com/Basis-Theory/ios-elements/issues/96)) ([3c1c479](https://github.com/Basis-Theory/ios-elements/commit/3c1c479638a225186151c1c68bc7c72d6a179ec9))
+
+
 ## [5.1.0](https://github.com/Basis-Theory/ios-elements/compare/5.0.0...5.1.0) (2026-02-11)
 
 

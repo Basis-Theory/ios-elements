@@ -42,7 +42,7 @@ public enum Environment {
 }
 
 final public class BasisTheoryElements {
-    public static let version = "5.1.0" // do not modify. updated through CI
+    public static let version = "5.2.0" // do not modify. updated through CI
     public static var apiKey: String = ""
 
     internal static var _basePath: String? = nil
