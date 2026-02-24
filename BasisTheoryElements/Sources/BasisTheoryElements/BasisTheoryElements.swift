@@ -282,6 +282,51 @@ final public class BasisTheoryElements {
         }
     }
 
+    public static func updateToken(id: String, body: UpdateToken, apiKey: String? = nil, completion: @escaping ((_ data: CreateTokenResponse?, _ error: Error?) -> Void)) -> Void {
+        let endpoint = "PATCH /tokens/\(id)"
+        let btTraceId = UUID().uuidString
+        logBeginningOfApiCall(endpoint: endpoint, btTraceId: btTraceId)
+
+        var mutableBody = body
+        var mutableData = body.data
+        do {
+            try replaceElementRefs(body: &mutableData, endpoint: endpoint, btTraceId: btTraceId)
+        } catch {
+            completion(nil, TokenizingError.invalidInput)
+            return
+        }
+
+        mutableBody.data = mutableData
+        let updateTokenRequest = mutableBody.toUpdateTokenRequest()
+
+        var headers = getBasisTheoryHeaders(apiKey: getApiKey(apiKey), btTraceId: btTraceId)
+        headers["Content-Type"] = "application/merge-patch+json"
+        let url = "\(basePath)/tokens/\(id)"
+
+        HttpClientHelpers.executeTypedRequest(
+            method: .patch,
+            url: url,
+            headers: headers,
+            body: updateTokenRequest
+        ) { (result: CreateTokenResponse?, error: Error?) in
+            if let error = error {
+                TelemetryLogging.error("Unsuccessful API response", error: error, attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": false
+                ])
+                completion(nil, error)
+            } else {
+                TelemetryLogging.info("Successful API response", attributes: [
+                    "endpoint": endpoint,
+                    "BT-TRACE-ID": btTraceId,
+                    "apiSuccess": true
+                ])
+                completion(result, nil)
+            }
+        }
+    }
+
     public static func createTokenIntent(
         request: CreateTokenIntentRequest, apiKey: String? = nil,
         completion: @escaping ((_ data: TokenIntent?, _ error: Error?) -> Void)
@@ -423,7 +468,7 @@ final public class BasisTheoryElements {
                 ])
                 completion(nil, error)
             } else if let token = token {
-                guard let tokenData = token.data?.value as? [String: Any] else {
+                guard let tokenData = token.data?.deepUnwrap() as? [String: Any] else {
                     TelemetryLogging.error("Invalid token data format", error: HttpClientError.invalidResponse, attributes: [
                         "endpoint": endpoint,
                         "BT-TRACE-ID": btTraceId,

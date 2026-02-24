@@ -9,7 +9,7 @@ jobs:
   test:
     environment: PR
     name: Testing BasisTheoryElements Package
-    runs-on: macOS-latest
+    runs-on: macos-15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
   pod-linting:
     environment: PR
     name: Pod Linting
-    runs-on: macOS-latest
+    runs-on: macos-15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
