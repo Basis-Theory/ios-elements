@@ -35,7 +35,7 @@ public class TextElementUITextField: UITextField, InternalElementProtocol, Eleme
     var inputMask: [Any]?
     var inputTransform: ElementTransform?
     var inputValidation: NSRegularExpression?
-    var previousValue: String = ""
+    var previousValue: String = UUID().uuidString
     var readOnly: Bool = false
     var valueRef: TextElementUITextField?
     var copyIconColor: UIColor?

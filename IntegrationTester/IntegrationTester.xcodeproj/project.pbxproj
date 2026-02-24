@@ -15,6 +15,7 @@
 		0A5844202E32C81800D61EAF /* TokenIntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A58441D2E32C81800D61EAF /* TokenIntentViewController.swift */; };
 		0AB437902A4C9FB4000099CD /* HttpClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4378F2A4C9FB4000099CD /* HttpClientViewController.swift */; };
 		0AD41CA82E32C8D4002070F8 /* TokenIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD41CA72E32C8D4002070F8 /* TokenIntentTests.swift */; };
+		CA5CAD022F0C000000000001 /* UpdateTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CAD012F0C000000000001 /* UpdateTokenTests.swift */; };
 		428CB1062937C53000C8220E /* CardExpirationDateUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CB1052937C53000C8220E /* CardExpirationDateUITextFieldTests.swift */; };
 		428CB10A293E398B00C8220E /* CardNumberUITextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */; };
 		5EC845072EEB95F100B10269 /* EnvironmentConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC844F82EEA49ED00B10269 /* EnvironmentConfigurationTests.swift */; };
@@ -87,6 +88,7 @@
 		0A58441D2E32C81800D61EAF /* TokenIntentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenIntentViewController.swift; sourceTree = "<group>"; };
 		0AB4378F2A4C9FB4000099CD /* HttpClientViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientViewController.swift; sourceTree = "<group>"; };
 		0AD41CA72E32C8D4002070F8 /* TokenIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenIntentTests.swift; sourceTree = "<group>"; };
+		CA5CAD012F0C000000000001 /* UpdateTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTokenTests.swift; sourceTree = "<group>"; };
 		428CB1052937C53000C8220E /* CardExpirationDateUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardExpirationDateUITextFieldTests.swift; sourceTree = "<group>"; };
 		428CB109293E398B00C8220E /* CardNumberUITextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberUITextFieldTests.swift; sourceTree = "<group>"; };
 		5EC844F82EEA49ED00B10269 /* EnvironmentConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentConfigurationTests.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				023FB3372EC361D800CD88DF /* CardBrandSelectorUIButtonTests.swift */,
 				023FB3382EC361D800CD88DF /* CobadgeIntegrationTests.swift */,
 				0AD41CA72E32C8D4002070F8 /* TokenIntentTests.swift */,
+				CA5CAD012F0C000000000001 /* UpdateTokenTests.swift */,
 				646506012DC9490300660095 /* EncryptTokenTests.swift */,
 				929E30C22948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift */,
 				9253E8E1291EB66E00FDF1A9 /* ElementUITextFieldTests.swift */,
@@ -473,6 +476,7 @@
 				929E30C32948D0F900A01A56 /* TokenizeAndCreateTokenServiceTests.swift in Sources */,
 				92B7DCAF2939523C000DBB8A /* CardBrandTests.swift in Sources */,
 				0AD41CA82E32C8D4002070F8 /* TokenIntentTests.swift in Sources */,
+				CA5CAD022F0C000000000001 /* UpdateTokenTests.swift in Sources */,
 				023FB3392EC361D800CD88DF /* CardBrandSelectorUIButtonTests.swift in Sources */,
 				023FB33A2EC361D800CD88DF /* CobadgeIntegrationTests.swift in Sources */,
 				428CB1062937C53000C8220E /* CardExpirationDateUITextFieldTests.swift in Sources */,
