@@ -9,3 +9,6 @@ DerivedData/
 IntegrationTester/Env.plist
 **/.build
 .idea/
+
+# IDE
+.cursor
