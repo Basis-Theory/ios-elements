@@ -1,32 +1,37 @@
 # iOS Elements
 
-iOS SDK for Basis Theory Elements — Swift library providing secure UI components for collecting sensitive data.
+Swift SDK providing secure UI components for collecting sensitive data on iOS.
 
-## Development Workflow
-
-```bash
-swift build           # Build the package
-```
-
-Also available as a CocoaPod (`BasisTheoryElements.podspec`).
-
-## Testing
+## Build & Test
 
 ```bash
-swift test            # Run unit tests
+swift build          # Build via SPM
+swift test           # Unit tests (SPM — but see note below)
 ```
 
-Integration tests are in `IntegrationTester/` — run via Xcode.
+## Project Structure
 
-## Feedback Loops
+- `BasisTheoryElements/Sources/BasisTheoryElements/` — Library source (all `.swift` files)
+- `IntegrationTester/UnitTests/` — Unit tests (Xcode project, NOT SPM test target)
+- `IntegrationTester/AcceptanceTests/` — Acceptance tests (require API key + Xcode)
+- `Package.swift` — SPM package definition (no test targets defined here)
+- `BasisTheoryElements.podspec` — CocoaPods spec
 
-Run `swift test` for fast feedback. When a failing test is discovered, always verify it passes before considering the fix complete.
+## Gotchas
 
-## Standards & Conventions
+- **No SPM test target**: `Package.swift` does NOT define test targets. Unit tests are in `IntegrationTester/IntegrationTester.xcodeproj` — run via Xcode, not `swift test`.
+- **Dual distribution**: SPM (`Package.swift`) + CocoaPods (`BasisTheoryElements.podspec`). Both must stay in sync.
+- **CocoaPods has a different dependency**: Podspec depends on `BasisTheory` pod (v0.6.1), while SPM depends on `AnyCodable`. The CocoaPods build uses `COCOAPODS=1` preprocessor flag.
+- **Version in 3 places**: CI updates version in `BasisTheoryElements.podspec` (s.version + :tag), and `BasisTheoryElements.swift` (`public static let version`). All three must match.
+- **iOS 15+ minimum**: `platforms: [.iOS(.v15)]`
+- **Swift 5.5**
+- **Integration tests need config**: `IntegrationTester/Env.plist.example` shows required environment setup.
+- **Resource bundles**: Podspec includes `Assets.xcassets` — don't move or rename the Resources directory.
 
-- Swift, Swift Package Manager + CocoaPods
-- Library source in `BasisTheoryElements/`
+## Release
 
-## Links
+Automated on push to `master`. CI bumps version tag, updates podspec + `BasisTheoryElements.swift` version + CHANGELOG, then runs `pod trunk push --allow-warnings`.
 
-- [Elements docs](https://developers.basistheory.com/docs/sdks/mobile/ios/)
+## Docs
+
+- [iOS Elements SDK](https://developers.basistheory.com/docs/sdks/mobile/ios/)
