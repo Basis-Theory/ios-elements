@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import BasisTheoryElements
-import BasisTheory
 
 class RawProxyResponseController: UIViewController {
     @IBOutlet weak var textField: TextElementUITextField!
@@ -31,25 +30,24 @@ class RawProxyResponseController: UIViewController {
                 
                 // AUTHORIZING A SESSION SHOULD HAPPEN ON THE BACKEND
                 let privateProdBtApiKey = Configuration.getConfiguration().privateProdBtApiKey!
-                SessionsAPI.authorizeWithRequestBuilder(authorizeSessionRequest: AuthorizeSessionRequest(nonce: nonce, permissions: ["token:read", "token:use"])).addHeader(name: "BT-API-KEY", value: privateProdBtApiKey).execute {
-                    result in
+                BasisTheoryElements.authorizeSession(nonce: nonce, permissions: ["token:read", "token:use"], apiKey: privateProdBtApiKey) { data, error in
                     if(error != nil) {
                         print(error!)
                         self.error.text = error?.localizedDescription
                     }
                     
-                    try! result.get().body
-                    
-                    let proxyKey = Configuration.getConfiguration().proxyKey
-                    let proxyHttpRequest = ProxyHttpRequest(method: .post, body: ["text": "test"])
-                    BasisTheoryElements.proxy(
-                        apiKey: sessionApiKey,
-                        proxyKey: proxyKey,
-                        proxyHttpRequest: proxyHttpRequest)
-                    { response, data, error in
-                        DispatchQueue.main.async {
-                            if let data = data! as JSON? {
-                                print(data)
+                    if(data != nil) {
+                        let proxyKey = Configuration.getConfiguration().proxyKey
+                        let proxyHttpRequest = ProxyHttpRequest(method: .post, body: ["text": "test"])
+                        BasisTheoryElements.proxy(
+                            apiKey: sessionApiKey,
+                            proxyKey: proxyKey,
+                            proxyHttpRequest: proxyHttpRequest)
+                        { response, data, error in
+                            DispatchQueue.main.async {
+                                if let data = data! as JSON? {
+                                    print(data)
+                                }
                             }
                         }
                     }

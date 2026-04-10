@@ -7,7 +7,6 @@
 
 import XCTest
 import BasisTheoryElements
-import BasisTheory
 import Combine
 
 final class TextElementUITextFieldTests: XCTestCase {
@@ -192,9 +191,9 @@ final class TextElementUITextFieldTests: XCTestCase {
         
         let transformQueryExpectation = self.expectation(description: "Query Token By ID to Test Transformed Textfield")
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
 
                 XCTAssertEqual(token["textFieldRef"] as! String, transformedPhoneNumber)
                 XCTAssertEqual(token["myProp"] as! String, "myValue")
@@ -202,7 +201,7 @@ final class TextElementUITextFieldTests: XCTestCase {
                 XCTAssertEqual((token["object"] as! [String: String])["textFieldRef"], transformedPhoneNumber)
 
                 transformQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }
@@ -275,6 +274,83 @@ final class TextElementUITextFieldTests: XCTestCase {
         XCTAssertEqual(iconImageView?.tintColor, UIColor.red)
     }
     
+    func testCopyEventEmitted() throws {
+        let textField = TextElementUITextField()
+        try! textField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event emitted")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.insertText("test value")
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, true)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        textField.perform(#selector(textField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventContainsCorrectMetadata() throws {
+        let textField = TextElementUITextField()
+        let regexDigit = try! NSRegularExpression(pattern: "\\d")
+        let mask = [regexDigit, regexDigit, regexDigit]
+        try! textField.setConfig(options: TextElementOptions(mask: mask, enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with mask metadata")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.insertText("12")
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, false) // mask not satisfied
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                XCTAssertEqual(message.maskSatisfied, false)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        textField.perform(#selector(textField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventWithEmptyField() throws {
+        let textField = TextElementUITextField()
+        try! textField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with empty field")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.empty, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        textField.perform(#selector(textField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
     func testGetValueType() throws {
         let textField = TextElementUITextField()
         let intTextField = TextElementUITextField()
@@ -320,9 +396,9 @@ final class TextElementUITextFieldTests: XCTestCase {
         
         let valueTypeQueryExpectation = self.expectation(description: "Query Token By ID to Test Value Types")
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
 
                 XCTAssertEqual(token["stringTextField"] as! String, string)
                 XCTAssertEqual(token["intTextField"] as! Int, int)
@@ -331,11 +407,96 @@ final class TextElementUITextFieldTests: XCTestCase {
                 
 
                 valueTypeQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }
 
         waitForExpectations(timeout: 3)
+    }
+    
+    func testTextSetterTriggersChangeEventWithValidation() throws {
+        let textField = TextElementUITextField()
+        let customRegex = try! NSRegularExpression(pattern: "^\\d{16}$")
+        try! textField.setConfig(options: TextElementOptions(validation: customRegex))
+        
+        let changeExpectation = self.expectation(description: "text setter triggers change event")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            XCTAssertEqual(message.type, "textChange")
+            XCTAssertEqual(message.complete, true)
+            XCTAssertEqual(message.valid, true)
+            XCTAssertEqual(message.empty, false)
+            
+            // assert metadata updated
+            XCTAssertEqual(textField.metadata.complete, message.complete)
+            XCTAssertEqual(textField.metadata.valid, message.valid)
+            XCTAssertEqual(textField.metadata.empty, message.empty)
+            
+            changeExpectation.fulfill()
+        }.store(in: &cancellables)
+        
+        textField.text = "4242424242424242"
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testTextSetterTriggersChangeEventWithInvalidValue() throws {
+        let textField = TextElementUITextField()
+        let customRegex = try! NSRegularExpression(pattern: "^\\d{16}$")
+        try! textField.setConfig(options: TextElementOptions(validation: customRegex))
+        
+        let changeExpectation = self.expectation(description: "text setter triggers change event with invalid value")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            XCTAssertEqual(message.type, "textChange")
+            XCTAssertEqual(message.complete, false)
+            XCTAssertEqual(message.valid, false)
+            XCTAssertEqual(message.empty, false)
+            
+            // assert metadata updated
+            XCTAssertEqual(textField.metadata.complete, message.complete)
+            XCTAssertEqual(textField.metadata.valid, message.valid)
+            XCTAssertEqual(textField.metadata.empty, message.empty)
+            
+            changeExpectation.fulfill()
+        }.store(in: &cancellables)
+        
+        textField.text = "4242"
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testTextSetterTriggersChangeEventWithEmptyValue() throws {
+        let textField = TextElementUITextField()
+        
+        let changeExpectation = self.expectation(description: "text setter triggers change event with empty value")
+        var cancellables = Set<AnyCancellable>()
+        
+        textField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            XCTAssertEqual(message.type, "textChange")
+            XCTAssertEqual(message.complete, true)
+            XCTAssertEqual(message.valid, true)
+            XCTAssertEqual(message.empty, true)
+            
+            // assert metadata updated
+            XCTAssertEqual(textField.metadata.complete, message.complete)
+            XCTAssertEqual(textField.metadata.valid, message.valid)
+            XCTAssertEqual(textField.metadata.empty, message.empty)
+            
+            changeExpectation.fulfill()
+        }.store(in: &cancellables)
+        
+        textField.text = ""
+        
+        waitForExpectations(timeout: 1, handler: nil)
     }
 }

@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import BasisTheoryElements
-import BasisTheory
 
 class CardRevealViewController: UIViewController {
     @IBOutlet weak var cvcTextField: CardVerificationCodeUITextField!
@@ -27,25 +26,25 @@ class CardRevealViewController: UIViewController {
             let privateProdBtApiKey = Configuration.getConfiguration().privateProdBtApiKey!
             let btCardTokenId = "a568dd92-c48c-4221-8ce4-a0be9cbfa927"
             let rule = AccessRule(description: "GetTokenById iOS Test", priority: 1, transform: "reveal", conditions: [Condition(attribute: "id", _operator: "equals", value: btCardTokenId)], permissions: ["token:read", "token:use"])
-            SessionsAPI.authorizeWithRequestBuilder(authorizeSessionRequest: AuthorizeSessionRequest(nonce: nonce, rules: [rule])).addHeader(name: "BT-API-KEY", value: privateProdBtApiKey).execute { result in
-                try! result.get().body
-                
-                let lithicCardTokenPath = "/b9e07ec5-5220-4500-9e71-e788fcb1084e"
-                let proxyKey = "NmRFa5myoM7s5ZF9NiFuYc"
-                let proxyHttpRequest = ProxyHttpRequest(method: .get, path: lithicCardTokenPath)
-                BasisTheoryElements.proxy(
-                    apiKey: sessionApiKey,
-                    proxyKey: proxyKey,
-                    proxyHttpRequest: proxyHttpRequest)
-                { response, data, error in
-                    DispatchQueue.main.async {
-                        self.cvcTextField.setValue(elementValueReference: data!.cvv!.elementValueReference)
-                    }
-                    
-                    BasisTheoryElements.getTokenById(id: btCardTokenId, apiKey: sessionApiKey) { data, error in
+            BasisTheoryElements.authorizeSession(nonce: nonce, rules: [rule], apiKey: privateProdBtApiKey) { data, error in
+                if(data != nil) {
+                    let lithicCardTokenPath = "/b9e07ec5-5220-4500-9e71-e788fcb1084e"
+                    let proxyKey = "NmRFa5myoM7s5ZF9NiFuYc"
+                    let proxyHttpRequest = ProxyHttpRequest(method: .get, path: lithicCardTokenPath)
+                    BasisTheoryElements.proxy(
+                        apiKey: sessionApiKey,
+                        proxyKey: proxyKey,
+                        proxyHttpRequest: proxyHttpRequest)
+                    { response, data, error in
                         DispatchQueue.main.async {
-                            self.cardNumberTextField.setValue(elementValueReference: data!.data!.number!.elementValueReference)
-                            self.cardExpirationDateTextField.setValue(month: data!.data!.expiration_month!.elementValueReference, year: data!.data!.expiration_year!.elementValueReference)
+                            self.cvcTextField.setValue(elementValueReference: data!.cvv!.elementValueReference)
+                        }
+                        
+                        BasisTheoryElements.getTokenById(id: btCardTokenId, apiKey: sessionApiKey) { data, error in
+                            DispatchQueue.main.async {
+                                self.cardNumberTextField.setValue(elementValueReference: data!.data!.number!.elementValueReference)
+                                self.cardExpirationDateTextField.setValue(month: data!.data!.expiration_month!.elementValueReference, year: data!.data!.expiration_year!.elementValueReference)
+                            }
                         }
                     }
                 }

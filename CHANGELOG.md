@@ -1,3 +1,35 @@
+## [5.2.0](https://github.com/Basis-Theory/ios-elements/compare/5.1.0...5.2.0) (2026-02-24)
+
+
+### Features
+
+* implement token update ([#96](https://github.com/Basis-Theory/ios-elements/issues/96)) ([3c1c479](https://github.com/Basis-Theory/ios-elements/commit/3c1c479638a225186151c1c68bc7c72d6a179ec9))
+
+
+## [5.1.0](https://github.com/Basis-Theory/ios-elements/compare/5.0.0...5.1.0) (2026-02-11)
+
+
+### Features
+
+* add copy event support ([#95](https://github.com/Basis-Theory/ios-elements/issues/95)) ([43ba07c](https://github.com/Basis-Theory/ios-elements/commit/43ba07c27dda77f848802640554ce813d2a1395b))
+
+
+## [5.0.0](https://github.com/Basis-Theory/ios-elements/compare/4.10.0...5.0.0) (2026-01-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* feat: remove basistheory dependency
+
+* chore: update OS version for tests
+
+* feat: guard condition on getTokenById
+
+### Features
+
+* remove basistheory dependency ([#92](https://github.com/Basis-Theory/ios-elements/issues/92))! ([f2353e4](https://github.com/Basis-Theory/ios-elements/commit/f2353e404cea6b8bf97d01e11efc03b9a75ad231))
+
+
 ## [4.10.0](https://github.com/Basis-Theory/ios-elements/compare/4.9.0...4.10.0) (2025-12-12)
 
 

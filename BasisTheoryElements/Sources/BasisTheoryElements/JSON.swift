@@ -27,6 +27,23 @@ public enum JSON {
         }
         return nil
     }
+
+    public var value: Any? {
+        switch self {
+        case .elementValueReference(let ref):
+            return ref.getValue() ?? ""
+        case .arrayValue(let arr):
+            return arr.map { $0?.value }
+        case .dictionaryValue(let dict):
+            var result: [String: Any] = [:]
+            for (key, jsonValue) in dict {
+                result[key] = jsonValue.value
+            }
+            return result
+        case .rawValue(let val):
+            return val
+        }
+    }
     
     public subscript(index: Int) -> JSON? {
         get {

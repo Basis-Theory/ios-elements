@@ -7,7 +7,6 @@
 
 import XCTest
 import BasisTheoryElements
-import BasisTheory
 
 final class HttpClientTests: XCTestCase {
     private final var TIMEOUT_EXPECTATION = 5.0

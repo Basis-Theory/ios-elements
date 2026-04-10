@@ -7,7 +7,6 @@
 
 import XCTest
 @testable import BasisTheoryElements
-import BasisTheory
 import Combine
 
 final class CardNumberUITextFieldTests: XCTestCase {
@@ -275,6 +274,60 @@ final class CardNumberUITextFieldTests: XCTestCase {
         
         // assert color
         XCTAssertEqual(iconImageView?.tintColor, UIColor.red)
+    }
+    
+    func testCopyEventEmitted() throws {
+        let cardNumberTextField = CardNumberUITextField()
+        try! cardNumberTextField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event emitted")
+        var cancellables = Set<AnyCancellable>()
+        
+        cardNumberTextField.insertText("4242424242424242")
+        
+        cardNumberTextField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, true)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        cardNumberTextField.perform(#selector(cardNumberTextField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventWithIncompleteCard() throws {
+        let cardNumberTextField = CardNumberUITextField()
+        try! cardNumberTextField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with incomplete card")
+        var cancellables = Set<AnyCancellable>()
+        
+        // Insert incomplete (and Luhn-invalid) card number
+        cardNumberTextField.insertText("4243")
+        
+        cardNumberTextField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, false)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, false)
+                XCTAssertEqual(message.maskSatisfied, false)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        cardNumberTextField.perform(#selector(cardNumberTextField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     func testBinLookupTriggeredAfter6Digits() throws {

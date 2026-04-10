@@ -1,17 +1,14 @@
 //
-//  CereateToken.swift
-//  
+//  UpdateToken.swift
 //
-//  Created by Amber Torres on 11/21/22.
+//
+//  Created by Cascade on 02/11/26.
 //
 
 import AnyCodable
 
-public struct CreateToken {
-    public var id: String?
-    public var type: String?
+public struct UpdateToken {
     public var data: [String: Any]
-    public var encryption: EncryptionMetadata?
     public var privacy: Privacy?
     public var metadata: [String: String]?
     public var searchIndexes: [String]?
@@ -20,12 +17,9 @@ public struct CreateToken {
     public var deduplicateToken: Bool?
     public var expiresAt: String?
     public var containers: [String]?
-    
-    public init(id: String? = nil, type: String? = nil, data: [String: Any], encryption: EncryptionMetadata? = nil, privacy: Privacy? = nil, metadata: [String: String]? = nil, searchIndexes: [String]? = nil, fingerprintExpression: String? = nil, mask: String? = nil, deduplicateToken: Bool? = nil, expiresAt: String? = nil, containers: [String]? = nil) {
-        self.id = id
-        self.type = type
+
+    public init(data: [String: Any], privacy: Privacy? = nil, metadata: [String: String]? = nil, searchIndexes: [String]? = nil, fingerprintExpression: String? = nil, mask: String? = nil, deduplicateToken: Bool? = nil, expiresAt: String? = nil, containers: [String]? = nil) {
         self.data = data
-        self.encryption = encryption
         self.privacy = privacy
         self.metadata = metadata
         self.searchIndexes = searchIndexes
@@ -35,13 +29,10 @@ public struct CreateToken {
         self.expiresAt = expiresAt
         self.containers = containers
     }
-    
-    func toCreateTokenRequest () -> CreateTokenRequest {
-        CreateTokenRequest(
-            id: self.id,
-            type: self.type,
+
+    func toUpdateTokenRequest() -> UpdateTokenRequest {
+        UpdateTokenRequest(
             data: AnyCodable(self.data),
-            encryption: self.encryption,
             privacy: self.privacy,
             metadata: self.metadata,
             searchIndexes: self.searchIndexes,

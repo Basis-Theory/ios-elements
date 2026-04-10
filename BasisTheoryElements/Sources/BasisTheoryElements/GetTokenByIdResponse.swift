@@ -6,14 +6,7 @@
 //
 
 import Foundation
-import BasisTheory
 import AnyCodable
-
-extension Token {
-    public func toGetTokenByIdResponse(data: JSON) -> GetTokenByIdResponse {
-        GetTokenByIdResponse(id: self.id, type: self.type, tenantId: self.tenantId, data: data, metadata: self.metadata, encryption: self.encryption, createdBy: self.createdBy, createdAt: self.createdAt, modifiedBy: self.modifiedBy, modifiedAt: self.modifiedAt, fingerprint: self.fingerprint, fingerprintExpression: self.fingerprintExpression, mask: self.mask, privacy: self.privacy, searchIndexes: self.searchIndexes, expiresAt: self.expiresAt, containers: self.containers)
-    }
-}
 
 public struct GetTokenByIdResponse {
     public var id: String?

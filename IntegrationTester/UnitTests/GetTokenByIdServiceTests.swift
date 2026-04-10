@@ -7,7 +7,6 @@
 
 import Foundation
 import XCTest
-import BasisTheory
 import BasisTheoryElements
 
 final class GetTokenByIdServiceTests: XCTestCase {
@@ -18,9 +17,10 @@ final class GetTokenByIdServiceTests: XCTestCase {
     private final var TIMEOUT_EXPECTATION = 3.0
     
     override func setUpWithError() throws {
-        BasisTheoryAPI.basePath = "https://api.flock-dev.com"
+        BasisTheoryElements.basePath = "https://api.flock-dev.com"
         
         let btApiKey = Configuration.getConfiguration().btApiKey!
+        let privateBtApiKey = Configuration.getConfiguration().privateBtApiKey!
         
         let tokenizeExpectation = self.expectation(description: "Create token")
         let body = CreateToken(type: "token", data: [
@@ -41,15 +41,12 @@ final class GetTokenByIdServiceTests: XCTestCase {
         
         waitForExpectations(timeout: TIMEOUT_EXPECTATION)
         
-        let privateBtApiKey = Configuration.getConfiguration().privateBtApiKey!
         let accessRule = AccessRule(description: "GetTokenById iOS Test", priority: 1, transform: "reveal", conditions: [Condition(attribute: "id", _operator: "equals", value: self.createdToken!.id)], permissions: ["token:read"])
         let authorizeSessionExpectation = self.expectation(description: "Authorize session")
-        SessionsAPI.authorizeWithRequestBuilder(authorizeSessionRequest: AuthorizeSessionRequest(nonce: nonce, rules: [accessRule])).addHeader(name: "BT-API-KEY", value: privateBtApiKey).execute { result in
-            do {
-                try result.get().body
-                
+        BasisTheoryElements.authorizeSession(nonce: nonce, rules: [accessRule], apiKey: privateBtApiKey) { data, error in
+            if let data = data {
                 authorizeSessionExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }
@@ -109,14 +106,14 @@ final class GetTokenByIdServiceTests: XCTestCase {
         
         let idQueryExpectation = self.expectation(description: "Token ID Query")
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken!.id!).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken!.id!, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
 
                 XCTAssertEqual(token["textFieldRef"] as! String, self.MY_PROP_VALUE)
 
                 idQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }

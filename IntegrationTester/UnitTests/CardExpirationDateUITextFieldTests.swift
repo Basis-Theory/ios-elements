@@ -7,7 +7,6 @@
 
 import XCTest
 import BasisTheoryElements
-import BasisTheory
 import Combine
 
 final class CardExpirationDateUITextFieldTests: XCTestCase {
@@ -216,14 +215,14 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
         
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
         let idQueryExpectation = self.expectation(description: "Token ID Query")
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken["id"] as! String).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken["id"] as! String, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
                 XCTAssertEqual(token["monthRef"] as? Int, Int(self.formatMonth(month: self.getCurrentMonth())))
                 XCTAssertEqual(token["yearRef"] as? Int, Int(formattedYear))
                 
                 idQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }
@@ -268,9 +267,9 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
         let privateApiKey = Configuration.getConfiguration().privateBtApiKey!
         let idQueryExpectation = self.expectation(description: "Token ID Query")
         
-        TokensAPI.getByIdWithRequestBuilder(id: createdToken["id"] as! String).addHeader(name: "BT-API-KEY", value: privateApiKey).execute { result in
-            do {
-                let token = try result.get().body.data!.value as! [String: Any]
+        BasisTheoryElements.getTokenById(id: createdToken["id"] as! String, apiKey: privateApiKey) { data, error in
+            if let data = data {
+                let token = data.data!.value as! [String: Any]
                 XCTAssertEqual(token["fullYear"] as! String, expectedYear)
                 XCTAssertEqual(token["singleDigitMonth"] as! String, "\(expectedMonth.suffix(1))")
                 XCTAssertEqual(token["dubleDigitMonth"] as! String, expectedMonth)
@@ -279,9 +278,8 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
                 XCTAssertEqual(token["monthForwardSlashTwoDigitYear"] as! String, "\(expectedMonth)/\(expectedYear.suffix(2))")
                 XCTAssertEqual(token["fullYearDashMonth"] as! String, "\(expectedYear)-\(expectedMonth)")
                 
-                
                 idQueryExpectation.fulfill()
-            } catch {
+            } else if let error = error {
                 print(error)
             }
         }
@@ -356,5 +354,59 @@ final class CardExpirationDateUITextFieldTests: XCTestCase {
         
         // assert color
         XCTAssertEqual(iconImageView?.tintColor, UIColor.red)
+    }
+    
+    func testCopyEventEmitted() throws {
+        let expirationDateTextField = CardExpirationDateUITextField()
+        try! expirationDateTextField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event emitted")
+        var cancellables = Set<AnyCancellable>()
+        
+        let futureYear = getCurrentYear() + 1
+        expirationDateTextField.insertText(formatMonth(month: getCurrentMonth()) + "/" + String(futureYear))
+        
+        expirationDateTextField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, true)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, true)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        expirationDateTextField.perform(#selector(expirationDateTextField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testCopyEventWithIncompleteDate() throws {
+        let expirationDateTextField = CardExpirationDateUITextField()
+        try! expirationDateTextField.setConfig(options: TextElementOptions(enableCopy: true))
+        
+        let copyEventExpectation = self.expectation(description: "Copy event with incomplete date")
+        var cancellables = Set<AnyCancellable>()
+        
+        expirationDateTextField.insertText("12")
+        
+        expirationDateTextField.subject.sink { completion in
+            print(completion)
+        } receiveValue: { message in
+            if message.type == "copy" {
+                XCTAssertEqual(message.type, "copy")
+                XCTAssertEqual(message.complete, false)
+                XCTAssertEqual(message.empty, false)
+                XCTAssertEqual(message.valid, false)
+                XCTAssertEqual(message.maskSatisfied, false)
+                copyEventExpectation.fulfill()
+            }
+        }.store(in: &cancellables)
+        
+        expirationDateTextField.perform(#selector(expirationDateTextField.copyText))
+        
+        waitForExpectations(timeout: 1, handler: nil)
     }
 }
