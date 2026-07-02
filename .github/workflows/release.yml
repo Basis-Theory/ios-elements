@@ -5,63 +5,90 @@ on:
     branches: [master]
 
 jobs:
-  tag-and-release:
-    environment: PROD 
-    name: Tag and Release
+  cut-tag:
+    name: Cut tag
+    runs-on: ubuntu-latest
+    environment: TAG
+    outputs:
+      new_tag: ${{ steps.tag-version.outputs.new_tag }}
+      release_type: ${{ steps.tag-version.outputs.release_type }}
+      changelog: ${{ steps.tag-version.outputs.changelog }}
+    steps:
+      - name: Mint tag-app token
+        id: tag-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          app-id: ${{ vars.GH_TAG_APP_ID }}
+          private-key: ${{ secrets.GH_APP_TAG_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        with:
+          fetch-depth: 0
+
+      - name: Bump version and push tag
+        id: tag-version
+        uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0 # v6.0
+        with:
+          github_token: ${{ steps.tag-token.outputs.token }}
+          default_bump: false
+          tag_prefix: ""
+
+  release:
+    name: Write back & publish
+    needs: cut-tag
+    if: ${{ needs.cut-tag.outputs.release_type != '' }}
     runs-on: macOS-latest
+    environment: PROD
     steps:
       - name: Start Deploy Message
-        uses: Basis-Theory/public-github-actions/deploy-slack-action@master
+        uses: Basis-Theory/public-github-actions/deploy-slack-action@12362db6b1ad6b524d28c47a6489c3e73ecd656a # master
         with:
           slack-api-token: ${{ secrets.SLACK_DUCKBOT_API_KEY }}
           channel: ${{ vars.SLACK_DUCKBOT_RELEASE_CHANNEL_ID }}
 
+      - name: Mint semantic-release app token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          app-id: ${{ vars.SEMANTIC_RELEASE_APP_ID }}
+          private-key: ${{ secrets.SEMANTIC_RELEASE_APP_PRIVATE_KEY }}
+
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_SEMANTIC_RELEASE_PAT }}
-
-      - name: Bump version and push tag
-        id: tag-version
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          default_bump: false
-          tag_prefix: ""
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Commit files
-        if: ${{ steps.tag-version.outputs.release_type != '' }}
         run: |
           git config --local user.email "platform@basistheory.com"
           git config --local user.name "github-actions[bot]"
 
-          sed -i "" "s/\(s.version = \)'[^']*'/\1'${{ steps.tag-version.outputs.new_tag }}'/g" BasisTheoryElements.podspec
-          sed -i "" "s/\(:tag => \)'[^']*'/\1'${{ steps.tag-version.outputs.new_tag }}'/g" BasisTheoryElements.podspec
-          sed -i "" "s/\(public static let version = \)\"[^\"]*\"/\1\"${{ steps.tag-version.outputs.new_tag }}\"/g" BasisTheoryElements/Sources/BasisTheoryElements/BasisTheoryElements.swift
+          sed -i "" "s/\(s.version = \)'[^']*'/\1'${{ needs.cut-tag.outputs.new_tag }}'/g" BasisTheoryElements.podspec
+          sed -i "" "s/\(:tag => \)'[^']*'/\1'${{ needs.cut-tag.outputs.new_tag }}'/g" BasisTheoryElements.podspec
+          sed -i "" "s/\(public static let version = \)\"[^\"]*\"/\1\"${{ needs.cut-tag.outputs.new_tag }}\"/g" BasisTheoryElements/Sources/BasisTheoryElements/BasisTheoryElements.swift
 
-          echo "${{ steps.tag-version.outputs.changelog }}" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+          echo "${{ needs.cut-tag.outputs.changelog }}" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
 
           git add CHANGELOG.md BasisTheoryElements.podspec BasisTheoryElements/Sources/BasisTheoryElements/BasisTheoryElements.swift
-          
-          git commit -m "chore(release): upating podspec and changelog ${{ steps.tag-version.outputs.new_tag }} [skip ci]" || echo "Nothing to update"
+
+          git commit -m "chore(release): upating podspec and changelog ${{ needs.cut-tag.outputs.new_tag }} [skip ci]" || echo "Nothing to update"
 
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        if: ${{ steps.tag-version.outputs.release_type != '' }}
+        uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # master
         with:
-          github_token: ${{ secrets.GH_SEMANTIC_RELEASE_PAT }}
+          github_token: ${{ steps.app-token.outputs.token }}
           branch: ${{ github.ref }}
 
       - name: Push CocoaPods
-        if: ${{ steps.tag-version.outputs.release_type != '' }}
         run: pod trunk push --allow-warnings
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
 
       - name: Stop Deploy Message
         if: always()
-        uses: Basis-Theory/public-github-actions/deploy-slack-action@master
+        uses: Basis-Theory/public-github-actions/deploy-slack-action@12362db6b1ad6b524d28c47a6489c3e73ecd656a # master
         with:
           slack-api-token: ${{ secrets.SLACK_DUCKBOT_API_KEY }}
           channel: ${{ vars.SLACK_DUCKBOT_RELEASE_CHANNEL_ID }}
