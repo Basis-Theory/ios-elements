@@ -61,19 +61,22 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Commit files
+        env:
+          CHANGELOG: ${{ needs.cut-tag.outputs.changelog }}
+          NEW_TAG: ${{ needs.cut-tag.outputs.new_tag }}
         run: |
           git config --local user.email "platform@basistheory.com"
           git config --local user.name "github-actions[bot]"
 
-          sed -i "" "s/\(s.version = \)'[^']*'/\1'${{ needs.cut-tag.outputs.new_tag }}'/g" BasisTheoryElements.podspec
-          sed -i "" "s/\(:tag => \)'[^']*'/\1'${{ needs.cut-tag.outputs.new_tag }}'/g" BasisTheoryElements.podspec
-          sed -i "" "s/\(public static let version = \)\"[^\"]*\"/\1\"${{ needs.cut-tag.outputs.new_tag }}\"/g" BasisTheoryElements/Sources/BasisTheoryElements/BasisTheoryElements.swift
+          sed -i "" "s/\(s.version = \)'[^']*'/\1'${NEW_TAG}'/g" BasisTheoryElements.podspec
+          sed -i "" "s/\(:tag => \)'[^']*'/\1'${NEW_TAG}'/g" BasisTheoryElements.podspec
+          sed -i "" "s/\(public static let version = \)\"[^\"]*\"/\1\"${NEW_TAG}\"/g" BasisTheoryElements/Sources/BasisTheoryElements/BasisTheoryElements.swift
 
-          echo "${{ needs.cut-tag.outputs.changelog }}" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+          printf '%s\n' "$CHANGELOG" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
 
           git add CHANGELOG.md BasisTheoryElements.podspec BasisTheoryElements/Sources/BasisTheoryElements/BasisTheoryElements.swift
 
-          git commit -m "chore(release): upating podspec and changelog ${{ needs.cut-tag.outputs.new_tag }} [skip ci]" || echo "Nothing to update"
+          git commit -m "chore(release): upating podspec and changelog ${NEW_TAG} [skip ci]" || echo "Nothing to update"
 
       - name: Push changes
         uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # master
