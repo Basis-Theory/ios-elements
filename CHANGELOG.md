@@ -1,3 +1,11 @@
+### [5.2.1](https://github.com/Basis-Theory/ios-elements/compare/5.2.0...5.2.1) (2026-07-06)
+
+
+### Bug Fixes
+
+* **ENG-11425:** document two-app release token model ([#103](https://github.com/Basis-Theory/ios-elements/issues/103)) ([dd8b408](https://github.com/Basis-Theory/ios-elements/commit/dd8b408e00dfa4366e0a096de346d5942c93a5c1))
+
+
 ## [5.2.0](https://github.com/Basis-Theory/ios-elements/compare/5.1.0...5.2.0) (2026-02-24)
 
 
