@@ -1,3 +1,11 @@
+### [5.2.3](https://github.com/Basis-Theory/ios-elements/compare/5.2.2...5.2.3) (2026-07-06)
+
+
+### Bug Fixes
+
+* **ENG-11425:** treat already-published CocoaPods version as success ([#105](https://github.com/Basis-Theory/ios-elements/issues/105)) ([3f08ba9](https://github.com/Basis-Theory/ios-elements/commit/3f08ba9fd03e745301289887a6f3d253ce7e31cd))
+
+
 ### [5.2.1](https://github.com/Basis-Theory/ios-elements/compare/5.2.0...5.2.1) (2026-07-06)
 
 
