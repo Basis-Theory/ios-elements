@@ -84,9 +84,28 @@ jobs:
       # a publish failure leaves master untouched and the release stays re-runnable.
       # pod trunk push reads the local podspec, already version-bumped in Commit files.
       - name: Push CocoaPods
-        run: pod trunk push --allow-warnings
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+          NEW_TAG: ${{ needs.cut-tag.outputs.new_tag }}
+        run: |
+          set +e
+          push_output=$(pod trunk push --allow-warnings 2>&1)
+          push_code=$?
+          printf '%s\n' "$push_output"
+          if [ "$push_code" -eq 0 ]; then
+            exit 0
+          fi
+          # Trunk sometimes accepts the spec but the trailing GitHub commit API call
+          # times out (pod exits non-zero), and re-runs then hit a duplicate entry.
+          # If the version is already on trunk, treat the push as successful so the
+          # changelog write-back still runs.
+          echo "pod trunk push exited ${push_code}; checking whether ${NEW_TAG} is already on trunk..."
+          if curl -sf "https://trunk.cocoapods.org/api/v1/pods/BasisTheoryElements" \
+               | grep -qE "\"name\"[[:space:]]*:[[:space:]]*\"${NEW_TAG}\""; then
+            echo "Version ${NEW_TAG} is already published to CocoaPods trunk; treating as success."
+            exit 0
+          fi
+          exit "${push_code}"
 
       - name: Push changes
         uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # master
