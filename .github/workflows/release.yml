@@ -80,16 +80,19 @@ jobs:
 
           git commit -m "chore(release): upating podspec and changelog ${NEW_TAG} [skip ci]" || echo "Nothing to update"
 
+      # Publish to CocoaPods BEFORE pushing the changelog write-back to master, so
+      # a publish failure leaves master untouched and the release stays re-runnable.
+      # pod trunk push reads the local podspec, already version-bumped in Commit files.
+      - name: Push CocoaPods
+        run: pod trunk push --allow-warnings
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+
       - name: Push changes
         uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # master
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           branch: ${{ github.ref }}
-
-      - name: Push CocoaPods
-        run: pod trunk push --allow-warnings
-        env:
-          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
 
       - name: Stop Deploy Message
         if: always()
