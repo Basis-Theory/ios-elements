@@ -23,9 +23,33 @@ cat <<EOT > ./IntegrationTester/Env.plist
 </plist>
 EOT
 
+# The runner's Xcode moves with `latest-stable`, so its installed simulator
+# runtimes move too. Pinning an OS version made the job fail during destination
+# resolution — before building anything — as soon as that runtime was dropped.
+# Naming only the device lets xcodebuild pick whichever runtime is installed.
+DESTINATION="${IOS_TEST_DESTINATION:-platform=iOS Simulator,name=iPhone 16 Pro}"
+
+echo "Available simulator destinations:"
+xcrun simctl list devices available || true
+
+# The raw xcodebuild output is kept: xcpretty hides runner crashes and other
+# non-assertion failures, which is why a run could report every bundle at
+# 0 failures and still exit non-zero with nothing in the log to explain it.
+set +e
 xcodebuild clean test \
     -project ./IntegrationTester/IntegrationTester.xcodeproj \
     -scheme IntegrationTester \
     -configuration Debug \
-    -destination platform="iOS Simulator,OS=18.6,name=iPhone 16 Pro" \
-    | xcpretty
+    -destination "$DESTINATION" \
+    -resultBundlePath ./xcodebuild-result.xcresult \
+    2>&1 | tee ./xcodebuild.log | xcpretty
+status=${PIPESTATUS[0]}
+set -e
+
+if [ "$status" -ne 0 ]; then
+    echo "::group::xcodebuild failure detail (raw output)"
+    grep -nE "error:|Testing failed|Failing tests|failed to|crash|Restarting|unexpected exit|lost connection|\*\* TEST" ./xcodebuild.log | tail -60
+    echo "::endgroup::"
+fi
+
+exit "$status"
