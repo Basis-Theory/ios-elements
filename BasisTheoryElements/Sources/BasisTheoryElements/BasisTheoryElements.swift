@@ -35,8 +35,10 @@ public enum Environment {
         switch self {
         case .TEST:
             return "https://api.test.basistheory.com"
-        case .US, .EU:
-            return "https://api.basistheory.com"
+        case .US:
+            return "https://api.us.basistheory.com"
+        case .EU:
+            return "https://api.eu.basistheory.com"
         }
     }
 }
