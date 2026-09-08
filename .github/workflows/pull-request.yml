@@ -24,6 +24,19 @@ jobs:
           DEV_BT_API_KEY: ${{ secrets.DEV_BT_API_KEY }}
           DEV_PRIVATE_BT_API_KEY: ${{ secrets.DEV_PRIVATE_BT_API_KEY }}
 
+      # Kept for failures only: xcpretty summarises the run but drops the
+      # diagnostics for crashes and other non-assertion failures.
+      - name: Upload xcodebuild output
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-output
+          path: |
+            xcodebuild.log
+            xcodebuild-result.xcresult
+          retention-days: 14
+          if-no-files-found: warn
+
   pod-linting:
     environment: PR
     name: Pod Linting
