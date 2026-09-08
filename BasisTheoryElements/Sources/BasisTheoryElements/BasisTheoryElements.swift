@@ -26,13 +26,20 @@ public enum HttpClientError: Error, Equatable {
     case httpError(statusCode: Int, body: String?)
 }
 
+/// The compatibility host. Used whenever no environment is selected, so an
+/// unconfigured caller is never moved to a regional endpoint.
+internal let DEFAULT_BASE_PATH = "https://api.basistheory.com"
+
 public enum Environment {
+    case DEFAULT
     case TEST
     case US
     case EU
 
     var url: String {
         switch self {
+        case .DEFAULT:
+            return DEFAULT_BASE_PATH
         case .TEST:
             return "https://api.test.basistheory.com"
         case .US:
@@ -49,14 +56,16 @@ final public class BasisTheoryElements {
 
     internal static var _basePath: String? = nil
     internal static var _environment: Environment? = nil
-    internal static var _computedBasePath: String = "https://api.basistheory.com"
+    internal static var _computedBasePath: String = DEFAULT_BASE_PATH
 
     public static var environment: Environment? {
         get { _environment }
         set {
             _environment = newValue
-            if _basePath == nil, let env = newValue {
-                _computedBasePath = env.url
+            // Clearing the environment returns to the compatibility host rather
+            // than leaving the previously selected region in place.
+            if _basePath == nil {
+                _computedBasePath = newValue?.url ?? DEFAULT_BASE_PATH
             }
         }
     }
@@ -608,7 +617,7 @@ final public class BasisTheoryElements {
     internal static func _resetConfiguration() {
         _basePath = nil
         _environment = nil
-        _computedBasePath = "https://api.basistheory.com"
+        _computedBasePath = DEFAULT_BASE_PATH
     }
 }
 
