@@ -15,8 +15,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Dependency Check
+        env:
+          # NVD now rejects unauthenticated requests, and dependency-check treats an
+          # empty key as invalid rather than falling back, so without this the scan
+          # exits 14 on "Error updating the NVD Data" before it reads Package.swift.
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
-          docker run -v "/home/runner/work/ios-elements/ios-elements":"/github/workspace" --workdir "/github/workspace" owasp/dependency-check-action:latest --enableExperimental --project "BasisTheoryElements" --failOnCVSS 1 --scan "Package.swift" --out "/github/workspace/reports"
+          docker run -v "/home/runner/work/ios-elements/ios-elements":"/github/workspace" --workdir "/github/workspace" owasp/dependency-check-action:latest --enableExperimental --project "BasisTheoryElements" --failOnCVSS 1 --scan "Package.swift" --out "/github/workspace/reports" --nvdApiKey "$NVD_API_KEY"
 
       - name: Upload Test results
         if: success() || failure()
