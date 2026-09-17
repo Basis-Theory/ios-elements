@@ -1,3 +1,11 @@
+### [5.2.4](https://github.com/Basis-Theory/ios-elements/compare/5.2.3...5.2.4) (2026-09-17)
+
+
+### Bug Fixes
+
+* authenticate the dependency check against the NVD API ([#107](https://github.com/Basis-Theory/ios-elements/issues/107)) ([ddcd1c7](https://github.com/Basis-Theory/ios-elements/commit/ddcd1c70eef5873ff38f1bdcced393a237ea10c7))
+
+
 ### [5.2.3](https://github.com/Basis-Theory/ios-elements/compare/5.2.2...5.2.3) (2026-07-06)
 
 
