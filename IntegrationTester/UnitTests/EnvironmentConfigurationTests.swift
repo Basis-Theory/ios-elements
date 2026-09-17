@@ -31,14 +31,14 @@ final class EnvironmentConfigurationTests: XCTestCase {
     func testSettingEnvironmentToUS() {
         BasisTheoryElements.environment = .US
 
-        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.us.basistheory.com")
         XCTAssertEqual(BasisTheoryElements.environment, .US)
     }
 
     func testSettingEnvironmentToEU() {
         BasisTheoryElements.environment = .EU
 
-        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.eu.basistheory.com")
         XCTAssertEqual(BasisTheoryElements.environment, .EU)
     }
 
@@ -79,16 +79,76 @@ final class EnvironmentConfigurationTests: XCTestCase {
 
         BasisTheoryElements.environment = .US
 
-        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.us.basistheory.com")
     }
 
-    func testClearingEnvironment() {
+    func testRegionalEnvironmentsResolveToDistinctHosts() {
+        BasisTheoryElements.environment = .US
+        let usPath = BasisTheoryElements.basePath
+
+        BasisTheoryElements.environment = .EU
+
+        XCTAssertNotEqual(usPath, BasisTheoryElements.basePath)
+        XCTAssertEqual(usPath, "https://api.us.basistheory.com")
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.eu.basistheory.com")
+    }
+
+    func testRegionalEnvironmentIsOptIn() {
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+
+        BasisTheoryElements.environment = .EU
+
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.eu.basistheory.com")
+    }
+
+    func testExplicitBasePathBeatsRegionalEnvironment() {
+        BasisTheoryElements.basePath = "https://custom.api.com"
+
+        BasisTheoryElements.environment = .EU
+
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://custom.api.com")
+    }
+
+    func testClearingEnvironmentReturnsToTheDefault() {
         BasisTheoryElements.environment = .TEST
         XCTAssertEqual(BasisTheoryElements.basePath, "https://api.test.basistheory.com")
 
         BasisTheoryElements.environment = nil
 
-        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.test.basistheory.com")
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+    }
+
+    func testClearingARegionReturnsToTheDefault() {
+        BasisTheoryElements.environment = .EU
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.eu.basistheory.com")
+
+        BasisTheoryElements.environment = nil
+
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+    }
+
+    func testSettingEnvironmentToDEFAULT() {
+        BasisTheoryElements.environment = .DEFAULT
+
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+        XCTAssertEqual(BasisTheoryElements.environment, .DEFAULT)
+    }
+
+    func testSwitchingFromARegionBackToDEFAULT() {
+        BasisTheoryElements.environment = .EU
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.eu.basistheory.com")
+
+        BasisTheoryElements.environment = .DEFAULT
+
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://api.basistheory.com")
+    }
+
+    func testClearingEnvironmentDoesNotOverrideAnExplicitBasePath() {
+        BasisTheoryElements.basePath = "https://custom.api.com"
+
+        BasisTheoryElements.environment = nil
+
+        XCTAssertEqual(BasisTheoryElements.basePath, "https://custom.api.com")
     }
 
     func testBackwardsCompatibilityWithDirectBasePathAssignment() {
