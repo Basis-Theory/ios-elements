@@ -26,7 +26,10 @@ EOT
 # The runner's Xcode moves with `latest-stable`, so its installed simulator
 # runtimes move too. Pinning an OS version made the job fail during destination
 # resolution — before building anything — as soon as that runtime was dropped.
-# Naming only the device lets xcodebuild pick whichever runtime is installed.
+# Naming only the device lets xcodebuild pick whichever runtime is installed. If a
+# runner image ever ships more than one simulator matching this name, resolution
+# becomes ambiguous; set IOS_TEST_DESTINATION to a fully qualified destination to
+# pin it.
 DESTINATION="${IOS_TEST_DESTINATION:-platform=iOS Simulator,name=iPhone 16 Pro}"
 
 echo "Available simulator destinations:"
@@ -48,7 +51,11 @@ set -e
 
 if [ "$status" -ne 0 ]; then
     echo "::group::xcodebuild failure detail (raw output)"
-    grep -nE "error:|Testing failed|Failing tests|failed to|crash|Restarting|unexpected exit|lost connection|\*\* TEST" ./xcodebuild.log | tail -60
+    # `|| true` is load-bearing: grep exits 1 when it matches nothing, which is the
+    # normal case for a failure mode not in this pattern list. Under `set -eo pipefail`
+    # that would kill the script here, skipping ::endgroup:: and replacing the real
+    # xcodebuild status with grep's 1.
+    grep -nE "error:|Testing failed|Failing tests|failed to|crash|Restarting|unexpected exit|lost connection|\*\* TEST" ./xcodebuild.log | tail -60 || true
     echo "::endgroup::"
 fi
 
