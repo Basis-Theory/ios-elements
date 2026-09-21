@@ -1,3 +1,11 @@
+### [5.2.5](https://github.com/Basis-Theory/ios-elements/compare/5.2.4...5.2.5) (2026-09-21)
+
+
+### Bug Fixes
+
+* **ENG-11715:** resolve US and EU environments to regional hosts ([#106](https://github.com/Basis-Theory/ios-elements/issues/106)) ([4ece056](https://github.com/Basis-Theory/ios-elements/commit/4ece0560c89928cb3f635f19235f3b2f405b9876))
+
+
 ### [5.2.4](https://github.com/Basis-Theory/ios-elements/compare/5.2.3...5.2.4) (2026-09-17)
 
 
