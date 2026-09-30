@@ -1,0 +1,49 @@
+name: SDK Size
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - .github/workflows/sdk-size.yml
+      - .github/scripts/measure-sdk-size.py
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: Git ref to compare against
+        required: true
+        default: master
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    name: Compare compiled SDK sizes
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: candidate
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha || inputs.baseline_ref }}
+          path: baseline
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Measure Release arm64 binaries
+        run: python3 candidate/.github/scripts/measure-sdk-size.py baseline candidate sdk-size
+
+      - name: Upload measurement evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdk-size
+          path: sdk-size
+          retention-days: 30
+          if-no-files-found: error
