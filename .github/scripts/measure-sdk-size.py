@@ -38,12 +38,14 @@ def output(args, cwd=None):
     return subprocess.check_output(args, cwd=cwd, text=True).strip()
 
 
-def measure(label, products):
+def measure(label, products, exclude=()):
     binaries = {}
     destination = report_dir / label
     destination.mkdir()
     for framework in sorted(products.rglob("*.framework")):
         name = framework.stem
+        if name in exclude:
+            continue
         binary = framework / name
         if not binary.is_file():
             continue
@@ -87,7 +89,7 @@ def cocoapods(label, source):
         f"SYMROOT={products}", f"OBJROOT={work_dir / (label + '-objects')}",
         *BUILD_SETTINGS,
     ])
-    return {"pods": lock["PODS"], "binaries": measure(label, products / "Release-iphoneos")}
+    return {"pods": lock["PODS"], "binaries": measure(label, products / "Release-iphoneos", exclude={"Pods_App"})}
 
 
 def replace_once(path, old, new):

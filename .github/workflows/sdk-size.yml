@@ -34,7 +34,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: '26.3'
 
       - name: Measure Release arm64 binaries
         run: python3 candidate/.github/scripts/measure-sdk-size.py baseline candidate sdk-size
