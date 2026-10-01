@@ -41,6 +41,12 @@ Add the following line to your `Podfile` under your `target`:
     pod 'BasisTheoryElements'
 ```
 
+Starting with 6.0.0, BasisTheoryElements no longer installs the `BasisTheory` pod. If your app imports `BasisTheory` directly, add it to your `Podfile`:
+
+```ruby
+    pod 'BasisTheory'
+```
+
 ## Features
 
 - [TextElementUITextField](https://developers.basistheory.com/docs/sdks/mobile/ios/types#textelementuitextfield) to securely collect text input
