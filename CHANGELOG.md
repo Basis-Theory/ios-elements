@@ -1,3 +1,21 @@
+## [6.0.0](https://github.com/Basis-Theory/ios-elements/compare/5.2.5...6.0.0) (2026-10-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ENG-11750:** BasisTheoryElements no longer installs the BasisTheory pod. CocoaPods consumers that import BasisTheory directly must add pod 'BasisTheory' to their Podfile.
+
+* test(ENG-11750): measure compiled SDK dependency sizes
+
+* test(ENG-11750): exclude the CocoaPods validation wrapper
+
+* chore(ENG-11750): remove temporary SDK size measurement tooling
+
+### Bug Fixes
+
+* **ENG-11750:** remove unused CocoaPods client dependency ([#108](https://github.com/Basis-Theory/ios-elements/issues/108)) ([8658756](https://github.com/Basis-Theory/ios-elements/commit/8658756dd89710c2afde43cd4197373463835874))
+
+
 ### [5.2.5](https://github.com/Basis-Theory/ios-elements/compare/5.2.4...5.2.5) (2026-09-21)
 
 
