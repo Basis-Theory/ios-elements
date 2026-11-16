@@ -35,13 +35,15 @@ And add `BasisTheoryElements` as a dependency to your `target`:
 
 ### CocoaPods
 
-Add the following line to your `Podfile` under your `target`:
+CocoaPods Trunk is read-only as of December 2, 2026, so `BasisTheoryElements` is no longer published to CocoaPods. Version **6.0.0** is the last release available there and will stay installable:
 
 ```ruby
-    pod 'BasisTheoryElements'
+    pod 'BasisTheoryElements', '6.0.0'
 ```
 
-Starting with 6.0.0, BasisTheoryElements no longer installs the `BasisTheory` pod. If your app imports `BasisTheory` directly, add it to your `Podfile`:
+New releases are only available through Swift Package Manager. We recommend migrating to SPM to keep receiving updates.
+
+If your app imports `BasisTheory` directly, add it to your `Podfile` as well, since `BasisTheoryElements` 6.0.0 no longer installs it:
 
 ```ruby
     pod 'BasisTheory'

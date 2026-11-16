@@ -37,29 +37,6 @@ jobs:
           retention-days: 14
           if-no-files-found: warn
 
-  pod-linting:
-    environment: PR
-    name: Pod Linting
-    runs-on: macos-15
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      
-      - name: Pod Linting
-        run: pod lib lint --allow-warnings --no-clean --validation-dir="$RUNNER_TEMP/cocoapods-lint"
-
-      - name: Verify installed CocoaPods dependencies
-        run: |
-          ruby -ryaml - "$RUNNER_TEMP/cocoapods-lint/Podfile.lock" <<'RUBY'
-          lockfile = YAML.load_file(ARGV.fetch(0))
-          pods = lockfile.fetch('PODS').flat_map do |entry|
-            entry.is_a?(Hash) ? entry.keys : entry
-          end.map { |entry| entry.split.first }.sort
-          expected = %w[AnyCodable-FlightSchool BasisTheoryElements]
-          abort "Unexpected CocoaPods dependencies: #{pods.inspect}" unless pods == expected
-          puts "CocoaPods dependencies: #{pods.join(', ')}"
-          RUBY
-
   dependency-check-test:
     environment: PR
     name: Dependency Check Test
